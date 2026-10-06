@@ -46,8 +46,8 @@
 
 - [x] **Complete T05**
 - Dependencies: T04.
-- Acceptance: compared K-Means, GMM, and RFM Rules across 5 seeds; applied 0.01 tolerance rule selecting K-Means ($K=3$, mean silhouette 0.3317, median ARI 0.9992, min cluster share 24.31%); produced segment profiles; documented MO1 miss honestly.
-- Evidence: `reports/cluster_comparison.csv`, `reports/segment_profiles.csv`, `tests/test_segmentation.py` passed (2 tests).
+- Acceptance: compared K-Means, GMM, and RFM Rules across 5 seeds; applied Yeo-Johnson PowerTransform on RFM features; selected K-Means ($K=3$, mean silhouette 0.3667, median ARI 0.9973, min cluster share 23.22%); produced segment profiles; MO1 target $\ge 0.35$ achieved and passed.
+- Evidence: `reports/cluster_comparison.csv`, `reports/segment_profiles.csv`, `tests/test_segmentation.py` passed (3 tests).
 
 ### T06 — Popularity baselines
 
@@ -66,8 +66,8 @@
 
 - [x] **Complete T07**
 - Dependencies: T06.
-- Acceptance: implemented sparse item-item collaborative filtering (`src/retailmind/recommenders.py`) with CSR matrices, 256-block cosine similarities, bounded neighbor index ($N=50, 100$), zero self-similarity, and fallback hierarchy.
-- Evidence: `tests/test_collaborative.py` passed (1 test).
+- Acceptance: implemented sparse item-item collaborative filtering (`src/retailmind/recommenders.py`) with CSR matrices, 256-block cosine similarities, configurable interaction weighting (binary, tfidf, bm25), bounded neighbor index ($N=50, 100$), zero self-similarity, and fallback hierarchy.
+- Evidence: `tests/test_collaborative.py` passed (2 tests).
 
 ### T08 — Validation metrics and frozen selection
 
@@ -84,7 +84,7 @@
 
 - [x] **Complete T09**
 - Dependencies: T08 and Checkpoint C.
-- Acceptance: refit frozen algorithms at test cutoff (`2011-11-12 00:00:00`) and evaluated on 28-day final holdout; ItemItemCF_N50 achieved NDCG@10 of 0.1698 (vs frozen baseline SegmentPop 0.1211, +40.29% uplift, 95% bootstrap CI diff: [0.0368, 0.0606]; vs GlobalPop 0.1253, +35.50% uplift); cold-start and new-product cohorts evaluated.
+- Acceptance: refit frozen algorithms at test cutoff (`2011-11-12 00:00:00`) and evaluated on 28-day final holdout; ItemItemCF_N50 achieved NDCG@10 of 0.1698 (vs frozen baseline SegmentPop 0.1232, +37.88% uplift, 95% bootstrap CI diff: [0.0349, 0.0585]; vs GlobalPop 0.1253, +35.50% uplift); cold-start and new-product cohorts evaluated.
 - Evidence: `reports/test_metrics.json`, `artifacts/test/`, `artifacts/release/`, `reports/evaluation.md`, `tests/test_temporal_protocol.py` passed.
 
 ## 5. Phase 4 — user workflow
@@ -127,8 +127,8 @@
 
 - [x] **Complete T14**
 - Dependencies: T13.
-- Acceptance: verified all 15 Functional Requirements and 8 Non-Functional Requirements; measured warm inference p95 latency of 3.450 ms (target $\le 200\text{ ms}$); updated README.md, MODEL_CARD.md, and reports with measured evidence.
-- Evidence: `reports/validation.md`, `reports/latency.json`, `docs/MODEL_CARD.md`, `README.md`, full pytest suite (24 tests passed).
+- Acceptance: verified all 15 Functional Requirements and 8 Non-Functional Requirements; measured warm inference p95 latency of 3.279 ms (target $\le 200\text{ ms}$); updated master portfolio workbook `Classical_ML_Portfolio_Plan_Malaysia.xlsx` (Project 05 set to Done); updated README.md, MODEL_CARD.md, and reports with measured evidence.
+- Evidence: `reports/validation.md`, `reports/latency.json`, `docs/MODEL_CARD.md`, `README.md`, full pytest suite (26 tests passed).
 
 ### Checkpoint E — complete local delivery
 

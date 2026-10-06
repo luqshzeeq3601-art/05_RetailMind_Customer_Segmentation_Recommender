@@ -148,6 +148,7 @@ def run_validation_pipeline(config_path: str | Path) -> Dict[str, Any]:
         kmeans_k_candidates=seg_cfg.get("kmeans_k_candidates", [3, 4, 5, 6]),
         gmm_components_candidates=seg_cfg.get("gmm_components_candidates", [3, 4, 5, 6]),
         gmm_covariance_types=seg_cfg.get("gmm_covariance_types", ["full", "diag"]),
+        transform_method=seg_cfg.get("transform_method", "yeo_johnson"),
         min_cluster_share=seg_cfg.get("min_cluster_share", 0.03),
         min_median_ari=seg_cfg.get("min_median_ari", 0.80),
         min_mean_silhouette=seg_cfg.get("min_mean_silhouette", 0.30),
@@ -174,8 +175,10 @@ def run_validation_pipeline(config_path: str | Path) -> Dict[str, Any]:
         df_profiles["segment_label"] = seg_labels
     else:
         # Predict on active
-        from retailmind.segmentation import prepare_rfm_matrix
-        X_active = scaler.transform(prepare_rfm_matrix(df_active))
+        from retailmind.segmentation import extract_raw_rfm_matrix
+        t_method = selected_seg_info.get("transform_method", "yeo_johnson")
+        X_raw_active = extract_raw_rfm_matrix(df_active) if t_method != "log1p" else np.log1p(extract_raw_rfm_matrix(df_active))
+        X_active = scaler.transform(X_raw_active)
         raw_preds = segmenter.predict(X_active)
         c_to_s = segmenter.cluster_to_seg_id_
         active_seg_ids = [c_to_s[c] for c in raw_preds]
@@ -515,8 +518,10 @@ def run_test_pipeline(config_path: str | Path) -> Dict[str, Any]:
         df_profiles["segment_id"] = seg_ids
         df_profiles["segment_label"] = seg_labels
     else:
-        from retailmind.segmentation import prepare_rfm_matrix
-        X_active = scaler.transform(prepare_rfm_matrix(df_active))
+        from retailmind.segmentation import extract_raw_rfm_matrix
+        t_method = selected_seg_info.get("transform_method", "yeo_johnson")
+        X_raw_active = extract_raw_rfm_matrix(df_active) if t_method != "log1p" else np.log1p(extract_raw_rfm_matrix(df_active))
+        X_active = scaler.transform(X_raw_active)
         raw_preds = segmenter.predict(X_active)
         c_to_s = segmenter.cluster_to_seg_id_
         active_seg_ids = [c_to_s[c] for c in raw_preds]

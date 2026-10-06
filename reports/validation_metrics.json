@@ -21,11 +21,11 @@
     "SegmentPopularity": {
       "model_name": "SegmentPopularity",
       "cohort_size": 1088,
-      "mean_ndcg": 0.098993,
-      "mean_recall": 0.037131,
-      "mean_precision": 0.087684,
-      "mean_hit_rate": 0.457721,
-      "catalog_coverage": 0.0063,
+      "mean_ndcg": 0.097035,
+      "mean_recall": 0.03693,
+      "mean_precision": 0.089706,
+      "mean_hit_rate": 0.47886,
+      "catalog_coverage": 0.0071,
       "fallback_item_share": 1.0,
       "personalized_customer_share": 0.0
     },
@@ -55,27 +55,28 @@
   "strongest_baseline": "SegmentPopularity",
   "selected_recommender": "ItemItemCF_N50",
   "cf_qualifies": true,
-  "relative_ndcg_gain": 0.7426,
+  "relative_ndcg_gain": 0.7778,
   "bootstrap_ci_95": {
     "cf_ndcg": [
       0.1597,
       0.1848
     ],
     "baseline_ndcg": [
-      0.0908,
-      0.1076
+      0.0889,
+      0.1049
     ],
     "difference_ndcg": [
-      0.0619,
-      0.085
+      0.0639,
+      0.0874
     ]
   },
   "selected_segmentation": {
     "selected_family": "KMeans",
     "k_components": 3,
     "covariance_type": "none",
-    "mean_silhouette": 0.3317,
-    "median_ari": 0.9992,
+    "transform_method": "yeo_johnson",
+    "mean_silhouette": 0.3667,
+    "median_ari": 0.9973,
     "is_rule_baseline": false
   }
 }

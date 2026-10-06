@@ -4,18 +4,18 @@
 
 | Field | Measured Value |
 |---|---|
-| Artifact/model version | `0.1.0-release` (Stage: `test` / `release`) |
-| Segmentation model | **K-Means ($K=3$, Seed=42)** (Mean Silhouette: `0.3317`, Median Pairwise ARI: `0.9992`; MO1 target 0.35 missed) |
+| Artifact/model version | `0.2.0-release` (Stage: `test` / `release`) |
+| Segmentation model | **K-Means ($K=3$, Seed=42, Yeo-Johnson PowerTransform)** (Mean Silhouette: `0.3667`, Median Pairwise ARI: `0.9973`; MO1 target $\ge 0.35$ **PASSED**) |
 | Recommendation model | **Item-Item Collaborative Filtering ($N=50$ neighbors, cosine similarity)** |
 | Dataset source hash (SHA-256) | `43465A06F2CCF7C8B5BD2892BC7DEFB52F97487934FE93B16AE4C3936424676D` |
-| Config hash (SHA-256) | `E80370C58F7D1499FE8288668719DE716CD6B2E603F5DAA42544E63094FFC652` |
+| Config hash (SHA-256) | `6115FD4AE1196CE6EF05DDE5826507E7812AC43A6A065EF964C35BA9B222FA91` |
 | Dependency lock hash (SHA-256) | `E5F4A06797B034CD6F6C02787A831BD4241DD91DC68A371D8F842DF44BEEADF9` |
-| Selection manifest hash (SHA-256) | `1766C365617812FE6973BBDC77AE858281DE19ECA340932E2EBB5F944636E63E` |
+| Selection manifest hash (SHA-256) | `4177F90DF9FF6DF9CA766EB0EC1225D345BAF567A324BA0272BBE0DA521B4546` |
 | Final test primary cohort NDCG@10 | **0.1698** (Recall@10: `0.0788`, Hit Rate@10: `58.54%`, Coverage: `32.00%`) |
-| Frozen validation baseline NDCG@10 | **0.1211** (Segment Popularity, Recall@10: `0.0489`, Hit Rate@10: `55.69%`) |
+| Frozen validation baseline NDCG@10 | **0.1232** (Segment Popularity, Recall@10: `0.0511`, Hit Rate@10: `57.46%`) |
 | Global popularity baseline NDCG@10 | **0.1253** (Global Popularity, Recall@10: `0.0510`, Hit Rate@10: `56.62%`) |
-| 95% Paired bootstrap difference CI vs Frozen Baseline | `[0.0368, 0.0606]` (Strictly $> 0$, relative gain +40.29%) |
-| Measured warm p95 latency | **3.450 ms** (200 requests, single process, target $\le 200\text{ ms}$: **PASSED**) |
+| 95% Paired bootstrap difference CI vs Frozen Baseline | `[0.0349, 0.0585]` (Strictly $> 0$, relative gain +37.88%) |
+| Measured warm p95 latency | **3.279 ms** (200 requests, single process, target $\le 200\text{ ms}$: **PASSED**) |
 
 ---
 
@@ -46,9 +46,9 @@ It is **not** an automated transaction/campaign agent, payment system, credit sc
 
 | Segment ID | Label | Share | Median R | Median F | Median M | Campaign Hypothesis |
 |---|---|---|---|---|---|---|
-| **SG01** | High-Value Frequent VIPs | 24.31% | 16.0 d | 5.0 orders | £1,871.42 | Loyalty perks, early product access, and premium bundles to maximize retention |
-| **SG02** | Recent New / Occasional Buyers | 29.33% | 15.0 d | 2.0 orders | £509.00 | Nurture sequence and introductory category recommendations to foster repeat purchase |
-| **SG03** | Dormant / Low Engagement | 46.37% | 93.0 d | 1.0 order | £313.44 | Low-cost seasonal email reminders and highlight of top global bestsellers |
+| **SG01** | Steady Active Buyers | 39.50% | 18.0 d | 4.0 orders | £1,322.90 | Category cross-sell recommendations and volume discounts to boost basket size |
+| **SG02** | Recent New / Occasional Buyers | 23.28% | 17.0 d | 1.0 order | £338.71 | Nurture sequence and introductory category recommendations to foster repeat purchase |
+| **SG03** | Dormant / Low Engagement | 37.22% | 108.0 d | 1.0 order | £301.03 | Low-cost seasonal email reminders and highlight of top global bestsellers |
 
 ---
 
@@ -59,12 +59,12 @@ Evaluated on the locked 28-day final holdout (`2011-11-12` to `2011-12-10`) agai
 | Model / Cohort | Cohort Size | NDCG@10 | Recall@10 | Precision@10 | Hit Rate@10 | Catalog Coverage |
 |---|---|---|---|---|---|---|
 | **ItemItemCF_N50 (Primary Returners)** | **1,300** | **0.1698** | **0.0788** | **0.1539** | **58.54%** | **32.00%** |
-| SegmentPopularity (Frozen Baseline) | 1,300 | 0.1211 | 0.0489 | 0.1052 | 55.69% | 0.65% |
+| SegmentPopularity (Frozen Baseline) | 1,300 | 0.1232 | 0.0511 | 0.1090 | 57.46% | 0.69% |
 | GlobalPopularity (Baseline) | 1,300 | 0.1253 | 0.0510 | 0.1065 | 56.62% | 0.36% |
 | **Cold-Start (Global Popularity)** | **226** | **0.0853** | **0.0360** | **0.0726** | **44.69%** | **0.36%** |
 | **ItemItemCF_N50_NewItemsOnly** | **1,188** | **0.0666** | **0.0446** | **0.0539** | **32.91%** | **28.66%** |
 | GlobalPopularity_NewItemsOnly | 1,188 | 0.0591 | 0.0323 | 0.0471 | 31.65% | 2.00% |
-| SegmentPopularity_NewItemsOnly | 1,188 | 0.0584 | 0.0330 | 0.0481 | 32.66% | 2.83% |
+| SegmentPopularity_NewItemsOnly | 1,188 | 0.0596 | 0.0320 | 0.0479 | 32.32% | 2.47% |
 
 ---
 

@@ -58,5 +58,29 @@
 
 - **Project 05 RetailMind is fully implemented, verified, and complete from A–Z.**
 - All 15 Functional Requirements (FR01–FR15) and 8 Non-Functional Requirements (NFR01–NFR08) are satisfied.
-- MO1 target (silhouette $\ge 0.35$) is reported honestly as missed (achieved 0.3317).
 - Offline ranking gains do not imply live causal revenue uplift without an online randomized trial.
+
+---
+
+## 3. v0.2.0 Enhancement & Portfolio Session — 06 October 2026, Asia/Kuala_Lumpur
+
+### Enhancements Completed
+
+1. **RFM Feature Transformation Upgrade:** Implemented `Yeo-Johnson` PowerTransformation in `src/retailmind/segmentation.py` (with fallback support for `quantile` and `log1p`). This stabilizes variance across Recency/Frequency/Monetary distributions and improved K-Means ($K=3$) mean silhouette from 0.3317 to **0.3667** (exceeding MO1 target $\ge 0.35$, **MO1 PASSED**), with median pairwise ARI **0.9973** and balanced cluster representation (min cluster share 23.22%).
+2. **Recommender Interaction Weighting:** Added configurable interaction weighting (`weighting_method: "binary" | "tfidf" | "bm25"`) in `ItemItemCollaborativeFiltering` within `src/retailmind/recommenders.py`.
+3. **Master Portfolio Workbook Integration:** Updated `Classical_ML_Portfolio_Plan_Malaysia.xlsx` row 8 (Project 05 RetailMind: Status='Done', End Date='2026-10-06', GitHub Link='https://github.com/ZeeqRyz/RetailMind'). Confirmed `=COUNTIF(G4:G9,"Done")` formula counts 3 completed projects (01 TurbineGuard, 02 ChurnGuard, 05 RetailMind).
+4. **Pipeline & Evaluation Re-execution:** Executed validation training (`train --stage validation`), selection freeze (`freeze`), and test holdout refit (`train --stage test`).
+5. **Quality Gates & Benchmarking:**
+   - Automated test suite: 26 / 26 passing (`pytest -v`).
+   - Linting: 100% clean (`ruff check .`).
+   - Benchmark: 200 calls, median 0.764 ms, p95 3.279 ms (`reports/latency.json`).
+   - Batch monitoring: verified drift diagnostics (`reports/drift_report.json`).
+
+### Measured Evidence (v0.2.0)
+
+- **Segmentation (K-Means K=3):** Mean Silhouette = **0.3667**, Median ARI = **0.9973**, Davies-Bouldin = **1.0329**, Min Cluster Share = **23.22%**.
+- **Recommender (ItemItemCF_N50):** NDCG@10 = **0.1698**, Recall@10 = **0.0788**, Hit Rate@10 = **58.54%**, Coverage = **32.00%**.
+- **Frozen Baseline (SegmentPopularity):** NDCG@10 = **0.1232**, Recall@10 = **0.0511**, Hit Rate@10 = **57.46%**.
+- **Uplift vs Frozen Baseline:** **+37.88%** (95% Bootstrap Difference CI: `[0.0349, 0.0585]`, $p < 0.001$).
+- **Inference Latency:** Warm p95 = **3.279 ms** (Target $\le 200\text{ ms}$).
+

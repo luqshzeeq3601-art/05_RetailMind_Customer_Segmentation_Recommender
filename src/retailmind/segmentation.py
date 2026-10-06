@@ -7,7 +7,7 @@ import pandas as pd
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score, davies_bouldin_score, silhouette_score
 from sklearn.mixture import GaussianMixture
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import PowerTransformer, QuantileTransformer, StandardScaler
 
 
 class RFMRulesSegmenter:
@@ -80,12 +80,32 @@ class RFMRulesSegmenter:
         return seg_ids, seg_labels
 
 
-def prepare_rfm_matrix(df_active: pd.DataFrame) -> np.ndarray:
-    """Extract and log1p transform (R, F, M) for clustering."""
-    r = np.log1p(np.maximum(0, df_active["recency_days"].to_numpy()))
-    f = np.log1p(np.maximum(0, df_active["frequency_invoices"].to_numpy()))
-    m = np.log1p(np.maximum(0, df_active["monetary_gbp"].to_numpy()))
+def extract_raw_rfm_matrix(df_active: pd.DataFrame) -> np.ndarray:
+    """Extract raw non-negative (R, F, M) feature matrix."""
+    r = np.maximum(0.0, df_active["recency_days"].to_numpy(dtype=np.float64))
+    f = np.maximum(0.0, df_active["frequency_invoices"].to_numpy(dtype=np.float64))
+    m = np.maximum(0.0, df_active["monetary_gbp"].to_numpy(dtype=np.float64))
     return np.column_stack([r, f, m])
+
+
+def create_rfm_transformer(transform_method: str = "yeo_johnson") -> Any:
+    """Instantiate the fitted feature transformer for RFM clustering."""
+    if transform_method == "yeo_johnson":
+        return PowerTransformer(method="yeo-johnson", standardize=True)
+    elif transform_method == "quantile":
+        return QuantileTransformer(output_distribution="normal", n_quantiles=1000, random_state=42)
+    elif transform_method == "log1p":
+        return StandardScaler()
+    else:
+        raise ValueError(f"Unknown transform_method: {transform_method}")
+
+
+def prepare_rfm_matrix(df_active: pd.DataFrame, transform_method: str = "log1p") -> np.ndarray:
+    """Extract and transform (R, F, M) for clustering."""
+    raw_rfm = extract_raw_rfm_matrix(df_active)
+    if transform_method == "log1p":
+        return np.log1p(raw_rfm)
+    return raw_rfm
 
 
 def generate_cluster_label_and_hypothesis(
@@ -119,15 +139,16 @@ def evaluate_clustering_candidates(
     kmeans_k_candidates: List[int],
     gmm_components_candidates: List[int],
     gmm_covariance_types: List[str],
+    transform_method: str = "yeo_johnson",
     min_cluster_share: float = 0.03,
     min_median_ari: float = 0.80,
     min_mean_silhouette: float = 0.30,
     sample_size: int = 2000,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """Compare K-Means and GMM across multiple seeds, evaluate eligibility, and select best model."""
-    X_raw = prepare_rfm_matrix(df_active)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_raw)
+    transformer = create_rfm_transformer(transform_method)
+    X_raw = extract_raw_rfm_matrix(df_active) if transform_method != "log1p" else np.log1p(extract_raw_rfm_matrix(df_active))
+    X_scaled = transformer.fit_transform(X_raw)
 
     n_samples = len(df_active)
     if n_samples <= sample_size:
@@ -326,6 +347,7 @@ def evaluate_clustering_candidates(
             "selected_family": best_row["model_family"],
             "k_components": int(best_row["k_components"]),
             "covariance_type": best_row["covariance_type"],
+            "transform_method": transform_method,
             "mean_silhouette": float(best_row["mean_silhouette"]),
             "median_ari": float(best_row["median_ari"]),
             "is_rule_baseline": False,
@@ -335,6 +357,7 @@ def evaluate_clustering_candidates(
             "selected_family": "RFMRules",
             "k_components": 4,
             "covariance_type": "none",
+            "transform_method": "none",
             "mean_silhouette": None,
             "median_ari": None,
             "is_rule_baseline": True,
@@ -348,7 +371,7 @@ def fit_and_profile_selected_segmenter(
     df_active: pd.DataFrame,
     selected_info: Dict[str, Any],
     seed: int = 42,
-) -> Tuple[Any, StandardScaler, pd.DataFrame, Dict[str, Dict[str, Any]]]:
+) -> Tuple[Any, Any, pd.DataFrame, Dict[str, Dict[str, Any]]]:
     """Fit the chosen segmentation model on active customers, create segment mapping and profiles.
 
     Ordering rule for segment IDs (SG01, SG02, ...):
@@ -389,9 +412,10 @@ def fit_and_profile_selected_segmenter(
         return segmenter, None, pd.DataFrame(profiles_list), seg_profiles_dict
 
     # Learned model fit
-    X_raw = prepare_rfm_matrix(df_active)
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X_raw)
+    t_method = selected_info.get("transform_method", "yeo_johnson")
+    transformer = create_rfm_transformer(t_method)
+    X_raw = extract_raw_rfm_matrix(df_active) if t_method != "log1p" else np.log1p(extract_raw_rfm_matrix(df_active))
+    X_scaled = transformer.fit_transform(X_raw)
 
     family = selected_info["selected_family"]
     k = selected_info["k_components"]
@@ -471,4 +495,4 @@ def fit_and_profile_selected_segmenter(
     estimator.cluster_to_seg_id_ = cluster_to_seg_id
     estimator.seg_profiles_dict_ = seg_profiles_dict
 
-    return estimator, scaler, pd.DataFrame(profiles_list), seg_profiles_dict
+    return estimator, transformer, pd.DataFrame(profiles_list), seg_profiles_dict

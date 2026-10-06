@@ -1,4 +1,4 @@
 segment_id,raw_cluster,segment_label,customer_count,customer_share,median_recency,median_frequency,median_monetary,campaign_hypothesis
-SG01,1,High-Value Frequent VIPs,736,0.2431,16.0,5.0,1871.42,"Loyalty perks, early product access, and premium bundles to maximize retention."
-SG02,0,Recent New / Occasional Buyers,888,0.2933,15.0,2.0,509.0,Nurture sequence and introductory category recommendations to foster repeat purchase.
-SG03,2,Dormant / Low Engagement,1404,0.4637,93.0,1.0,313.44,Low-cost seasonal email reminders and highlight of top global bestsellers.
+SG01,1,Steady Active Buyers,1196,0.395,18.0,4.0,1322.9,Category cross-sell recommendations and volume discounts to boost basket size.
+SG02,2,Recent New / Occasional Buyers,705,0.2328,17.0,1.0,338.71,Nurture sequence and introductory category recommendations to foster repeat purchase.
+SG03,0,Dormant / Low Engagement,1127,0.3722,108.0,1.0,301.03,Low-cost seasonal email reminders and highlight of top global bestsellers.

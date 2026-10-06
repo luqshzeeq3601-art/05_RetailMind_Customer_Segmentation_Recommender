@@ -23,11 +23,11 @@
     "SegmentPopularity": {
       "model_name": "SegmentPopularity",
       "cohort_size": 1300,
-      "mean_ndcg": 0.121058,
-      "mean_recall": 0.048851,
-      "mean_precision": 0.105231,
-      "mean_hit_rate": 0.556923,
-      "catalog_coverage": 0.0065,
+      "mean_ndcg": 0.123171,
+      "mean_recall": 0.051099,
+      "mean_precision": 0.109,
+      "mean_hit_rate": 0.574615,
+      "catalog_coverage": 0.0069,
       "fallback_item_share": 1.0,
       "personalized_customer_share": 0.0
     },
@@ -56,11 +56,11 @@
     "SegmentPopularity_NewItemsOnly": {
       "model_name": "SegmentPopularity_NewItemsOnly",
       "cohort_size": 1188,
-      "mean_ndcg": 0.058391,
-      "mean_recall": 0.033001,
-      "mean_precision": 0.048064,
-      "mean_hit_rate": 0.326599,
-      "catalog_coverage": 0.0283,
+      "mean_ndcg": 0.059607,
+      "mean_recall": 0.031991,
+      "mean_precision": 0.047896,
+      "mean_hit_rate": 0.323232,
+      "catalog_coverage": 0.0247,
       "fallback_item_share": 1.0,
       "personalized_customer_share": 0.0
     },
@@ -95,20 +95,21 @@
       0.1807
     ],
     "baseline_ndcg": [
-      0.1132,
-      0.1293
+      0.115,
+      0.1313
     ],
     "difference_ndcg": [
-      0.0368,
-      0.0606
+      0.0349,
+      0.0585
     ]
   },
   "selected_segmentation": {
     "selected_family": "KMeans",
     "k_components": 3,
     "covariance_type": "none",
-    "mean_silhouette": 0.3317,
-    "median_ari": 0.9992,
+    "transform_method": "yeo_johnson",
+    "mean_silhouette": 0.3667,
+    "median_ari": 0.9973,
     "is_rule_baseline": false
   }
 }

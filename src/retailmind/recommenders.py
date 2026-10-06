@@ -4,7 +4,7 @@ from typing import Dict, List, Optional, Set, Tuple
 
 import numpy as np
 import pandas as pd
-from scipy.sparse import csr_matrix
+from scipy.sparse import csr_matrix, diags
 from sklearn.metrics.pairwise import cosine_similarity
 
 from retailmind.contracts import RecommendedItem
@@ -181,10 +181,12 @@ class ItemItemCollaborativeFiltering:
         top_n_neighbors: int = 50,
         min_co_buyers: int = 2,
         block_size: int = 256,
+        weighting_method: str = "binary",
     ) -> None:
         self.top_n_neighbors = top_n_neighbors
         self.min_co_buyers = min_co_buyers
         self.block_size = block_size
+        self.weighting_method = weighting_method
         # item_idx -> list of (neighbor_item_idx, similarity_score)
         self.neighbor_index: Dict[int, List[Tuple[int, float]]] = {}
         self.catalog_items: List[str] = []
@@ -216,9 +218,18 @@ class ItemItemCollaborativeFiltering:
             if valid_indices:
                 self.customer_history_indices[cid] = valid_indices
 
-        # interaction_csr is (n_users, n_items)
-        # item_user_matrix is (n_items, n_users)
-        item_user = interaction_csr.T.tocsr()
+        # Apply weighting if configured
+        matrix_to_use = interaction_csr
+        if self.weighting_method == "tfidf":
+            item_df = np.array(interaction_csr.sum(axis=0)).flatten()
+            n_users = interaction_csr.shape[0]
+            idf = np.log((n_users + 1.0) / (item_df + 1.0)) + 1.0
+            idf_diag = diags(idf)
+            matrix_to_use = interaction_csr.dot(idf_diag).tocsr()
+
+        # matrix_to_use is (n_users, n_items)
+        # item_user is (n_items, n_users)
+        item_user = matrix_to_use.T.tocsr()
         n_items = len(self.catalog_items)
         self.neighbor_index = {}
 
@@ -230,7 +241,7 @@ class ItemItemCollaborativeFiltering:
             # Cosine similarity block: (block_size, n_items)
             sim_block = cosine_similarity(block_items, item_user, dense_output=True)
 
-            # Also compute co-buyer counts: block_items * item_user.T
+            # Also compute co-buyer counts: block_items * interaction_csr.T
             co_buyers_block = (block_items * interaction_csr).toarray()
 
             for i_local in range(end_idx - start_idx):

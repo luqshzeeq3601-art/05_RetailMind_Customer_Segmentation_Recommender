@@ -32,3 +32,5 @@
 | D021 | Implement Playwright Chromium headless end-to-end testing | Verifies desktop and mobile viewports, interactive recommendation generation, and CSV download buttons automatically |
 | D022 | Include RFMRules and New-Product Baselines in evaluation outputs | Added RFMRules baseline evaluation (silhouette 0.2311) to `cluster_comparison.csv` and `GlobalPopularity_NewItemsOnly` / `SegmentPopularity_NewItemsOnly` baselines to test holdout metrics |
 | D023 | Document MO1 target as missed honestly | Target silhouette was $\ge 0.35$; achieved score is 0.3317. Documented honestly across all reports and model cards without changing thresholds post-hoc |
+| D024 | Implement Yeo-Johnson PowerTransform on RFM features for v0.2.0 | Stabilizes variance and normalizes skew in Recency/Frequency/Monetary distributions, lifting K-Means ($K=3$) mean silhouette from 0.3317 to 0.3667 (resolving MO1 target $\ge 0.35$ with ARI 0.9973) |
+| D025 | Update master portfolio spreadsheet status to Done | Updated Row 8 of `Classical_ML_Portfolio_Plan_Malaysia.xlsx` (Status='Done', End Date='2026-10-06', GitHub Link) upon completion and end-to-end verification |

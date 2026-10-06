@@ -12,10 +12,10 @@ RetailMind is an end-to-end customer intelligence system that transforms retail 
 
 | Capability | Model | Primary Metric | Baseline Comparison | Statistical Significance |
 |---|---|---|---|---|
-| **Segmentation** | **K-Means ($K=3$)** | Silhouette: **0.3317** *(Target 0.35 missed)* | Median Pairwise ARI: **0.9992** | Converged across 5 seeds; min cluster share 24.31% |
-| **Personalized Recommender** | **Item-Item CF ($N=50$)** | NDCG@10: **0.1698** | Segment Pop: `0.1211` (+40.29%), Global Pop: `0.1253` (+35.50%) | 95% Bootstrap CI Diff vs Frozen Baseline: `[0.0368, 0.0606]` ($p < 0.001$) |
+| **Segmentation** | **K-Means ($K=3$, Yeo-Johnson)** | Silhouette: **0.3667** *(Target $\ge 0.35$ PASSED)* | Median Pairwise ARI: **0.9973** | Converged across 5 seeds; min cluster share 23.22% |
+| **Personalized Recommender** | **Item-Item CF ($N=50$)** | NDCG@10: **0.1698** | Segment Pop: `0.1232` (+37.88%), Global Pop: `0.1253` (+35.50%) | 95% Bootstrap CI Diff vs Frozen Baseline: `[0.0349, 0.0585]` ($p < 0.001$) |
 | **Recommender Hit Rate** | **Item-Item CF ($N=50$)** | Hit Rate@10: **58.54%** | Recall@10: **0.0788** (Precision@10: `0.1539`) | Full un-sampled catalog ($|C| = 2,753$, Coverage 32.0%) |
-| **Inference Latency** | **Service API** | Warm p95: **3.450 ms** | Median: **0.789 ms** (200 requests) | Target $\le 200\text{ ms}$: **PASSED** |
+| **Inference Latency** | **Service API** | Warm p95: **3.279 ms** | Median: **0.764 ms** (200 requests) | Target $\le 200\text{ ms}$: **PASSED** |
 
 ---
 
@@ -23,9 +23,9 @@ RetailMind is an end-to-end customer intelligence system that transforms retail 
 
 | Segment ID | Segment Label | Customer Share | Median Recency | Median Frequency | Median Monetary | Target Campaign Strategy |
 |---|---|---|---|---|---|---|
-| **SG01** | **High-Value VIPs** | 24.31% | 16.0 days | 5.0 orders | £1,871.42 | Dedicated VIP perks, early product access, luxury bundles |
-| **SG02** | **Recent Occasional Buyers** | 29.33% | 15.0 days | 2.0 orders | £509.00 | Nurture sequence, category discovery recommendations |
-| **SG03** | **Dormant / Low Engagement** | 46.37% | 93.0 days | 1.0 order | £313.44 | Re-engagement win-back discounts, seasonal bestsellers |
+| **SG01** | **Steady Active Buyers** | 39.50% | 18.0 days | 4.0 orders | £1,322.90 | Category cross-sell recommendations and volume discounts to boost basket size |
+| **SG02** | **Recent New / Occasional Buyers** | 23.28% | 17.0 days | 1.0 order | £338.71 | Nurture sequence, category discovery recommendations |
+| **SG03** | **Dormant / Low Engagement** | 37.22% | 108.0 days | 1.0 order | £301.03 | Re-engagement win-back discounts, seasonal bestsellers |
 
 ---
 
@@ -75,7 +75,7 @@ py -3.11 -m venv .venv
 ### 3.3 Verification & Quality Gates
 
 ```powershell
-# Run full pytest test suite (24 tests)
+# Run full pytest test suite (26 tests)
 .\.venv\Scripts\python.exe -m pytest -q
 
 # Run Ruff linter
@@ -105,7 +105,7 @@ RetailMind Architecture:
 ├── 8-Step Data Cleaning Pipeline (390,859 eligible purchases retained)
 ├── Chronological Time Splitting (Validation: <2011-10-15, Test: <2011-11-12)
 ├── Time-Safe RFM Snapshot Engine (180-day active window, distinct invoices)
-├── Segment Estimator (K-Means K=3, Scaler + Log1p, Median RFM profiling)
+├── Segment Estimator (K-Means K=3, Yeo-Johnson PowerTransform + StandardScaler, Median RFM profiling)
 ├── Sparse Recommender Engine:
 │   ├── Item-Item Cosine Similarity (CSR sparse matrices, 256-block cosine)
 │   ├── Bounded Neighbor Index (Top 50 neighbors, min 2 co-buyers)

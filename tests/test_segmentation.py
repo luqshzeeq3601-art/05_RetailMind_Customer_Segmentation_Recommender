@@ -85,3 +85,32 @@ def test_clustering_evaluation_and_ordering() -> None:
         m0 = df_profiles.iloc[0]["median_monetary"]
         m1 = df_profiles.iloc[1]["median_monetary"]
         assert m0 >= m1 or df_profiles.iloc[0]["median_frequency"] >= df_profiles.iloc[1]["median_frequency"]
+
+
+def test_rfm_transformation_methods() -> None:
+    rng = np.random.RandomState(42)
+    n = 100
+    df_active = pd.DataFrame(
+        {
+            "customer_id": [f"CUST_{i}" for i in range(n)],
+            "recency_days": rng.uniform(1, 100, size=n),
+            "frequency_invoices": rng.randint(1, 20, size=n),
+            "monetary_gbp": rng.exponential(scale=300, size=n) + 10,
+            "status": ["known_active"] * n,
+        }
+    )
+
+    for method in ["yeo_johnson", "quantile", "log1p"]:
+        df_comp, sel_info = evaluate_clustering_candidates(
+            df_active,
+            seeds=[42, 43],
+            kmeans_k_candidates=[3],
+            gmm_components_candidates=[],
+            gmm_covariance_types=[],
+            transform_method=method,
+            min_cluster_share=0.01,
+            min_median_ari=0.50,
+            min_mean_silhouette=0.10,
+        )
+        assert not df_comp.empty
+        assert sel_info["transform_method"] == method

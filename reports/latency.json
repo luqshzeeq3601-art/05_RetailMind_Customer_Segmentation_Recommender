@@ -4,11 +4,11 @@
   "top_k": 10,
   "num_calls": 200,
   "warmup_calls": 10,
-  "median_ms": 0.789,
-  "p95_ms": 3.45,
-  "p99_ms": 7.367,
-  "max_ms": 54.221,
-  "min_ms": 0.02,
-  "mean_ms": 1.587,
+  "median_ms": 0.764,
+  "p95_ms": 3.279,
+  "p99_ms": 6.919,
+  "max_ms": 49.365,
+  "min_ms": 0.019,
+  "mean_ms": 1.5,
   "p95_target_met": true
 }

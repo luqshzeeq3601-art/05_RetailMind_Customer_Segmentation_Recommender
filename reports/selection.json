@@ -1,24 +1,25 @@
 {
-  "freeze_timestamp_utc": "2026-10-06T02:15:23.913473+00:00",
+  "freeze_timestamp_utc": "2026-10-06T02:31:28.912379+00:00",
   "source_sha256": "43465A06F2CCF7C8B5BD2892BC7DEFB52F97487934FE93B16AE4C3936424676D",
-  "config_sha256": "E80370C58F7D1499FE8288668719DE716CD6B2E603F5DAA42544E63094FFC652",
+  "config_sha256": "D14C1F835CD91C8651FDE6D5AE0E1DA1547831C188EB2E5CAFD1447988E9CBDD",
   "lock_sha256": "E5F4A06797B034CD6F6C02787A831BD4241DD91DC68A371D8F842DF44BEEADF9",
   "validation_cutoff": "2011-10-15 00:00:00",
   "selected_segmentation": {
     "selected_family": "KMeans",
     "k_components": 3,
     "covariance_type": "none",
-    "mean_silhouette": 0.3317,
-    "median_ari": 0.9992,
+    "transform_method": "yeo_johnson",
+    "mean_silhouette": 0.3667,
+    "median_ari": 0.9973,
     "is_rule_baseline": false
   },
   "selected_recommender": "ItemItemCF_N50",
   "cf_qualifies": true,
-  "relative_ndcg_gain": 0.7426,
+  "relative_ndcg_gain": 0.7778,
   "validation_ndcg": 0.172506,
   "validation_recall": 0.075122,
   "bootstrap_diff_ci_95": [
-    0.0619,
-    0.085
+    0.0639,
+    0.0874
   ]
 }

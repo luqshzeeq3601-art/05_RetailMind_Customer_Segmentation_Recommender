@@ -35,6 +35,7 @@ catalog:
 segmentation:
   seeds: [42, 43, 44, 45, 46]
   primary_seed: 42
+  transform_method: "yeo_johnson"
   kmeans_k_candidates: [3, 4, 5, 6]
   kmeans_n_init: 20
   gmm_components_candidates: [3, 4, 5, 6]
@@ -47,6 +48,7 @@ segmentation:
 
 recommenders:
   top_k: 10
+  weighting_method: "binary"
   cf_neighbor_candidates: [50, 100]
   cf_min_co_buyers: 2
   cf_block_size: 256
