@@ -1,0 +1,37 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches and temporary directories
+.pytest_cache/
+.pytest_tmp/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Virtual environments
+.venv/
+env/
+venv/
+ENV/
+
+# Data and artifacts (raw dataset, training/test bundles, processed cache)
+data/raw/
+data/processed/*.parquet
+artifacts/validation/
+artifacts/test/
+artifacts/release/
+
+# MLflow tracking
+mlruns/
+mlflow.db
+.mlflow/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

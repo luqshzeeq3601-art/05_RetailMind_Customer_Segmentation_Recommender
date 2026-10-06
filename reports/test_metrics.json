@@ -1,0 +1,114 @@
+{
+  "stage": "test",
+  "snapshot_cutoff": "2011-11-12 00:00:00",
+  "holdout_start": "2011-11-12 00:00:00",
+  "holdout_end": "2011-12-10 00:00:00",
+  "catalog_size": 2753,
+  "primary_cohort_size": 1300,
+  "cold_start_cohort_size": 226,
+  "new_product_cohort_size": 1188,
+  "future_item_coverage": 0.9831,
+  "models": {
+    "GlobalPopularity": {
+      "model_name": "GlobalPopularity",
+      "cohort_size": 1300,
+      "mean_ndcg": 0.125331,
+      "mean_recall": 0.051023,
+      "mean_precision": 0.106462,
+      "mean_hit_rate": 0.566154,
+      "catalog_coverage": 0.0036,
+      "fallback_item_share": 1.0,
+      "personalized_customer_share": 0.0
+    },
+    "SegmentPopularity": {
+      "model_name": "SegmentPopularity",
+      "cohort_size": 1300,
+      "mean_ndcg": 0.121058,
+      "mean_recall": 0.048851,
+      "mean_precision": 0.105231,
+      "mean_hit_rate": 0.556923,
+      "catalog_coverage": 0.0065,
+      "fallback_item_share": 1.0,
+      "personalized_customer_share": 0.0
+    },
+    "ColdStart_GlobalPop": {
+      "model_name": "ColdStart_GlobalPop",
+      "cohort_size": 226,
+      "mean_ndcg": 0.085318,
+      "mean_recall": 0.036048,
+      "mean_precision": 0.072566,
+      "mean_hit_rate": 0.446903,
+      "catalog_coverage": 0.0036,
+      "fallback_item_share": 1.0,
+      "personalized_customer_share": 0.0
+    },
+    "GlobalPopularity_NewItemsOnly": {
+      "model_name": "GlobalPopularity_NewItemsOnly",
+      "cohort_size": 1188,
+      "mean_ndcg": 0.059055,
+      "mean_recall": 0.032306,
+      "mean_precision": 0.047054,
+      "mean_hit_rate": 0.316498,
+      "catalog_coverage": 0.02,
+      "fallback_item_share": 1.0,
+      "personalized_customer_share": 0.0
+    },
+    "SegmentPopularity_NewItemsOnly": {
+      "model_name": "SegmentPopularity_NewItemsOnly",
+      "cohort_size": 1188,
+      "mean_ndcg": 0.058391,
+      "mean_recall": 0.033001,
+      "mean_precision": 0.048064,
+      "mean_hit_rate": 0.326599,
+      "catalog_coverage": 0.0283,
+      "fallback_item_share": 1.0,
+      "personalized_customer_share": 0.0
+    },
+    "ItemItemCF_N50": {
+      "model_name": "ItemItemCF_N50",
+      "cohort_size": 1300,
+      "mean_ndcg": 0.169828,
+      "mean_recall": 0.078849,
+      "mean_precision": 0.153923,
+      "mean_hit_rate": 0.585385,
+      "catalog_coverage": 0.32,
+      "fallback_item_share": 0.0,
+      "personalized_customer_share": 1.0
+    },
+    "ItemItemCF_N50_NewItemsOnly": {
+      "model_name": "ItemItemCF_N50_NewItemsOnly",
+      "cohort_size": 1188,
+      "mean_ndcg": 0.066568,
+      "mean_recall": 0.044586,
+      "mean_precision": 0.053872,
+      "mean_hit_rate": 0.329125,
+      "catalog_coverage": 0.2866,
+      "fallback_item_share": 0.0,
+      "personalized_customer_share": 1.0
+    }
+  },
+  "selected_recommender": "ItemItemCF_N50",
+  "frozen_baseline": "SegmentPopularity",
+  "bootstrap_ci_95": {
+    "cf_ndcg": [
+      0.1592,
+      0.1807
+    ],
+    "baseline_ndcg": [
+      0.1132,
+      0.1293
+    ],
+    "difference_ndcg": [
+      0.0368,
+      0.0606
+    ]
+  },
+  "selected_segmentation": {
+    "selected_family": "KMeans",
+    "k_components": 3,
+    "covariance_type": "none",
+    "mean_silhouette": 0.3317,
+    "median_ari": 0.9992,
+    "is_rule_baseline": false
+  }
+}

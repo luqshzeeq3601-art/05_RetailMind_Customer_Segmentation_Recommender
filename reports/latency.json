@@ -1,0 +1,14 @@
+{
+  "bundle": "artifacts/release",
+  "bundle_version": "0.1.0-release",
+  "top_k": 10,
+  "num_calls": 200,
+  "warmup_calls": 10,
+  "median_ms": 0.789,
+  "p95_ms": 3.45,
+  "p99_ms": 7.367,
+  "max_ms": 54.221,
+  "min_ms": 0.02,
+  "mean_ms": 1.587,
+  "p95_target_met": true
+}

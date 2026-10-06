@@ -1,0 +1,81 @@
+{
+  "stage": "validation",
+  "snapshot_cutoff": "2011-10-15 00:00:00",
+  "holdout_start": "2011-10-15 00:00:00",
+  "holdout_end": "2011-11-12 00:00:00",
+  "catalog_size": 2690,
+  "primary_cohort_size": 1088,
+  "future_item_coverage": 0.9557,
+  "models": {
+    "GlobalPopularity": {
+      "model_name": "GlobalPopularity",
+      "cohort_size": 1088,
+      "mean_ndcg": 0.090699,
+      "mean_recall": 0.034593,
+      "mean_precision": 0.082629,
+      "mean_hit_rate": 0.439338,
+      "catalog_coverage": 0.0037,
+      "fallback_item_share": 1.0,
+      "personalized_customer_share": 0.0
+    },
+    "SegmentPopularity": {
+      "model_name": "SegmentPopularity",
+      "cohort_size": 1088,
+      "mean_ndcg": 0.098993,
+      "mean_recall": 0.037131,
+      "mean_precision": 0.087684,
+      "mean_hit_rate": 0.457721,
+      "catalog_coverage": 0.0063,
+      "fallback_item_share": 1.0,
+      "personalized_customer_share": 0.0
+    },
+    "ItemItemCF_N50": {
+      "model_name": "ItemItemCF_N50",
+      "cohort_size": 1088,
+      "mean_ndcg": 0.172506,
+      "mean_recall": 0.075122,
+      "mean_precision": 0.154688,
+      "mean_hit_rate": 0.581801,
+      "catalog_coverage": 0.3019,
+      "fallback_item_share": 0.0,
+      "personalized_customer_share": 1.0
+    },
+    "ItemItemCF_N100": {
+      "model_name": "ItemItemCF_N100",
+      "cohort_size": 1088,
+      "mean_ndcg": 0.163462,
+      "mean_recall": 0.07037,
+      "mean_precision": 0.146048,
+      "mean_hit_rate": 0.568015,
+      "catalog_coverage": 0.2658,
+      "fallback_item_share": 0.0,
+      "personalized_customer_share": 1.0
+    }
+  },
+  "strongest_baseline": "SegmentPopularity",
+  "selected_recommender": "ItemItemCF_N50",
+  "cf_qualifies": true,
+  "relative_ndcg_gain": 0.7426,
+  "bootstrap_ci_95": {
+    "cf_ndcg": [
+      0.1597,
+      0.1848
+    ],
+    "baseline_ndcg": [
+      0.0908,
+      0.1076
+    ],
+    "difference_ndcg": [
+      0.0619,
+      0.085
+    ]
+  },
+  "selected_segmentation": {
+    "selected_family": "KMeans",
+    "k_components": 3,
+    "covariance_type": "none",
+    "mean_silhouette": 0.3317,
+    "median_ari": 0.9992,
+    "is_rule_baseline": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "dataset_name": "UCI Online Retail",
+  "source_url": "https://archive.ics.uci.edu/static/public/352/online+retail.zip",
+  "license": "Creative Commons Attribution 4.0 International (CC BY 4.0)",
+  "retrieval_time_utc": "2026-10-05T19:05:03.458334+00:00",
+  "raw_xlsx_path": "data\\raw\\Online Retail.xlsx",
+  "raw_xlsx_sha256": "43465A06F2CCF7C8B5BD2892BC7DEFB52F97487934FE93B16AE4C3936424676D",
+  "raw_row_count": 541909,
+  "columns": [
+    "InvoiceNo",
+    "StockCode",
+    "Description",
+    "Quantity",
+    "InvoiceDate",
+    "UnitPrice",
+    "CustomerID",
+    "Country"
+  ],
+  "min_invoice_date": "2010-12-01 08:26:00",
+  "max_invoice_date": "2011-12-09 12:50:00"
+}

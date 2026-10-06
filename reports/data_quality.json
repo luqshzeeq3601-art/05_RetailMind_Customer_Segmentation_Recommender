@@ -1,0 +1,41 @@
+{
+  "total_raw_rows": 541909,
+  "disjoint_removals": {
+    "rule2_invalid_core_values": 0,
+    "rule3_exact_duplicates": 5268,
+    "rule4_missing_customer_id": 135037,
+    "rule5_cancellations_and_nonpositive_qty": 8872,
+    "rule6_nonpositive_price": 40,
+    "rule7_excluded_merchandise_codes": 1833,
+    "rule8_non_positive_purchase_value": 0
+  },
+  "retained_rows": 390859,
+  "retained_purchase_value_gbp": 8722008.97,
+  "anonymous_transactions": {
+    "row_count": 135037,
+    "estimated_value_gbp": 1447487.53
+  },
+  "excluded_merchandise_codes": {
+    "POST": 1099,
+    "15056BL": 291,
+    "M": 279,
+    "C2": 133,
+    "DOT": 16,
+    "BANK CHARGES": 12,
+    "PADS": 3
+  },
+  "wholesale_concentration_training_prefix": {
+    "training_prefix_customers": 3783,
+    "training_prefix_total_spend_gbp": 6553953.51,
+    "top_1_pct_share": 0.3061,
+    "top_5_pct_share": 0.493,
+    "top_10_pct_share": 0.6023,
+    "top_5_customer_ids": {
+      "18102": 203146.86,
+      "14646": 203135.19,
+      "17450": 161022.98,
+      "12415": 118209.65,
+      "14156": 106788.71
+    }
+  }
+}

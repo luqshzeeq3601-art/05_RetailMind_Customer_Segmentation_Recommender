@@ -1,0 +1,64 @@
+dataset:
+  source_url: "https://archive.ics.uci.edu/static/public/352/online+retail.zip"
+  dataset_name: "UCI Online Retail"
+  license: "Creative Commons Attribution 4.0 International (CC BY 4.0)"
+  raw_zip_path: "data/raw/online_retail.zip"
+  raw_xlsx_path: "data/raw/Online Retail.xlsx"
+  provenance_path: "reports/data_provenance.json"
+  quality_path: "reports/data_quality.json"
+  processed_parquet_path: "data/processed/purchases.parquet"
+
+cleaning:
+  require_canonical_id: true
+  valid_stock_code_regex: "^[0-9]{5}[A-Z]?$"
+  drop_cancellations: true
+  drop_nonpositive_quantity: true
+  drop_nonpositive_price: true
+  drop_exact_duplicates: true
+
+temporal:
+  validation:
+    cutoff: "2011-10-15 00:00:00"
+    rfm_start: "2011-04-18 00:00:00"
+    future_start: "2011-10-15 00:00:00"
+    future_end: "2011-11-12 00:00:00"
+  test:
+    cutoff: "2011-11-12 00:00:00"
+    rfm_start: "2011-05-16 00:00:00"
+    future_start: "2011-11-12 00:00:00"
+    future_end: "2011-12-10 00:00:00"
+
+catalog:
+  min_distinct_buyers: 5
+  active_window_days: 90
+
+segmentation:
+  seeds: [42, 43, 44, 45, 46]
+  primary_seed: 42
+  kmeans_k_candidates: [3, 4, 5, 6]
+  kmeans_n_init: 20
+  gmm_components_candidates: [3, 4, 5, 6]
+  gmm_covariance_types: ["full", "diag"]
+  gmm_n_init: 5
+  min_cluster_share: 0.03
+  min_median_ari: 0.80
+  min_mean_silhouette: 0.30
+  silhouette_sample_size: 2000
+
+recommenders:
+  top_k: 10
+  cf_neighbor_candidates: [50, 100]
+  cf_min_co_buyers: 2
+  cf_block_size: 256
+  bootstrap_samples: 1000
+  bootstrap_seed: 42
+  min_relative_ndcg_gain: 0.10
+
+artifacts:
+  validation_dir: "artifacts/validation"
+  test_dir: "artifacts/test"
+  release_dir: "artifacts/release"
+
+tracking:
+  mlflow_tracking_uri: "sqlite:///mlflow.db"
+  experiment_name: "RetailMind"

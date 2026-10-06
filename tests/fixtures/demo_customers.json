@@ -1,0 +1,27 @@
+[
+  {
+    "id": "18102",
+    "label": "Demo VIP Spender (Active High-Value - 18102)",
+    "description": "High-frequency wholesale customer with frequent repeat purchases and large basket size."
+  },
+  {
+    "id": "17850",
+    "label": "Demo Steady Active Buyer (17850)",
+    "description": "Regular active shopper buying home decor and gift items with multiple distinct orders."
+  },
+  {
+    "id": "13047",
+    "label": "Demo Recent Occasional Buyer (13047)",
+    "description": "Recent customer with low order frequency seeking discovery of relevant catalog items."
+  },
+  {
+    "id": "14000",
+    "label": "Demo Inactive Shopper (Outside 180-Day Window - 14000)",
+    "description": "Historical buyer with prior purchase records but no transactions in the recent 180 days."
+  },
+  {
+    "id": "DEMO-NEW-999",
+    "label": "Demo Unknown / Cold-Start Customer (DEMO-NEW-999)",
+    "description": "New visitor with zero purchase history, receiving top global popularity bestsellers as fallback."
+  }
+]

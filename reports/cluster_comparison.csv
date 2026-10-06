@@ -1,0 +1,14 @@
+model_family,k_components,covariance_type,mean_silhouette,median_ari,davies_bouldin,min_cluster_share,is_eligible,bic
+RFMRules,4,none,0.2311,1.0,1.1985,0.1628,False,
+KMeans,3,none,0.3317,0.9992,1.1034,0.2351,True,
+KMeans,4,none,0.3402,0.988,1.0181,0.14,True,
+KMeans,5,none,0.3398,0.9955,0.9529,0.0928,True,
+KMeans,6,none,0.3166,0.9888,0.9779,0.0548,True,
+GMM,3,full,0.1699,1.0,1.7468,0.2209,False,295.9
+GMM,3,diag,0.2244,0.9992,1.4986,0.215,False,6326.6
+GMM,4,full,0.1583,1.0,1.7851,0.148,False,-1485.7
+GMM,4,diag,0.1658,1.0,1.7719,0.1096,False,-1300.2
+GMM,5,full,0.1391,0.9997,2.0549,0.0509,False,-5097.7
+GMM,5,diag,0.1434,1.0,2.067,0.0558,False,-5012.5
+GMM,6,full,0.178,0.9284,1.9571,0.0783,False,-5632.3
+GMM,6,diag,0.1767,0.9938,1.9096,0.0532,False,-5582.5
