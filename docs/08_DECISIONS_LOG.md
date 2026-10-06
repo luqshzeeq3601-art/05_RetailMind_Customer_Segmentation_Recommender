@@ -38,3 +38,8 @@
 | D027 | Establish dual MIT and CC BY 4.0 license structure | Created root `LICENSE` file granting MIT terms for Python application code and CC BY 4.0 attribution for dataset derivatives and documentation |
 | D028 | Deliver production FastAPI recommendation microservice | Implemented `src/retailmind/api.py` with `/health`, `/recommend`, `/segments`, `/customer/{id}/profile`, interactive Swagger `/docs`, and 5 automated tests |
 | D029 | Track release bundle in Git for Streamlit Community Cloud | Removed `artifacts/release/` from `.gitignore` so the 7.2 MB release bundle loads instantly on Streamlit Community Cloud without cloud-side training |
+
+
+## 6 October 2026: remediation evidence decision
+
+Preserve the original models and evaluation records. Repairs address packaging, evidence generation or display without retuning against viewed outcomes. Existing desktop/mobile browser verification passed with known-customer recommendation and CSV control. Candidate CI adds mounted-bundle Docker/browser smoke; image now includes the approved aggregate evaluation report required by the UI. Offline impact wording corrected. Local Docker and public access remain unverified.

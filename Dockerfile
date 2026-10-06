@@ -26,6 +26,7 @@ COPY src/ src/
 COPY app/ app/
 COPY configs/ configs/
 COPY tests/fixtures/demo_customers.json tests/fixtures/demo_customers.json
+COPY reports/test_metrics.json reports/test_metrics.json
 
 # Install package in editable/standard mode
 RUN pip install --no-deps -e .

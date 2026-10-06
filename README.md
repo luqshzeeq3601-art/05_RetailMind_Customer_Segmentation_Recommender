@@ -1,162 +1,107 @@
-# RetailMind: Customer Segmentation and Product Recommender
+# RetailMind
 
-[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3119/)
-[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
-[![MLflow](https://img.shields.io/badge/MLflow-Tracking-0194E2.svg)](https://mlflow.org/)
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://retailmind-recommender.streamlit.app)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+**Turn purchase history into customer segments and product recommendations.**
 
-RetailMind is an end-to-end customer intelligence system that transforms retail transaction history into **time-safe RFM customer segments** and **personalized product recommendations** with a Streamlit decision-support console and FastAPI microservice.
+[![CI](https://github.com/luqshzeeq3601-art/05_RetailMind_Customer_Segmentation_Recommender/actions/workflows/ci.yml/badge.svg?branch=fix%2Fportfolio-remediation)](https://github.com/luqshzeeq3601-art/05_RetailMind_Customer_Segmentation_Recommender/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-0f766e.svg)](LICENSE)
 
----
+RetailMind builds historical RFM snapshots, groups customers with K-Means and ranks products with item-item collaborative filtering. A shared service powers Streamlit, FastAPI and the CLI, with explicit segment/global-popularity fallback for sparse history and new customers.
 
-## 1. Key Measured Results
+## 1. Workflow
 
-| Capability | Model | Primary Metric | Baseline Comparison | Statistical Significance |
-|---|---|---|---|---|
-| **Segmentation** | **K-Means ($K=3$, Yeo-Johnson)** | Silhouette: **0.3667** *(Target $\ge 0.35$ PASSED)* | Median Pairwise ARI: **0.9973** | Converged across 5 seeds; min cluster share 23.22% |
-| **Personalized Recommender** | **Item-Item CF ($N=50$)** | NDCG@10: **0.1698** | Segment Pop: `0.1232` (+37.88%), Global Pop: `0.1253` (+35.50%) | 95% Bootstrap CI Diff vs Frozen Baseline: `[0.0349, 0.0585]` ($p < 0.001$) |
-| **Recommender Hit Rate** | **Item-Item CF ($N=50$)** | Hit Rate@10: **58.54%** | Recall@10: **0.0788** (Precision@10: `0.1539`) | Full un-sampled catalog ($|C| = 2,753$, Coverage 32.0%) |
-| **Inference Latency** | **Service API** | Warm p95: **3.279 ms** | Median: **0.764 ms** (200 requests) | Target $\le 200\text{ ms}$: **PASSED** |
+![RetailMind workflow: clean historical purchases, form chronological snapshots, fit RFM/K-Means segments and item-item collaborative filtering, load a trusted release bundle, and serve recommendations with popularity fallback.](docs/assets/workflow.png)
 
----
+Customer IDs are lookup keys, not model features. Features/catalogues use the allowed historical prefix; future transactions are reserved for evaluation. Fallback status remains visible to the caller.
 
-## 2. Business & Commercial Impact
+## 2. Measured results
 
-Translating statistical ranking metrics into tangible retail operations:
+UK UCI Online Retail benchmark, with recommendations evaluated against a subsequent 28-day purchase window.
 
-* **+41.3% Higher Product Discovery:** Personalized Item-Item CF delivers an average of **1.54 relevant suggestions per customer top-10 list** compared to **1.09** from popularity baselines (Recall@10 increased from 0.0511 to 0.0788, +54.2% relative uplift).
-* **46x Greater Catalog Exposure (Long-Tail Monetization):** Recommends **881 distinct active items** (32.0% catalog coverage) compared to only **19 items** (0.69% coverage) for segment popularity. This activates higher-margin niche inventory without cannibalizing store-wide bestsellers.
-* **58.5% Purchase Prediction Hit Rate:** Nearly 6 in 10 returning shoppers receive at least one item in their top 10 that they purchase during the subsequent 28-day window.
-* **Zero Infrastructure Overhead:** Warm p95 latency of **3.28 ms** enables real-time recommendation serving on standard CPU cloud instances without requiring GPU infrastructure.
+| Capability | Frozen result |
+| --- | --- |
+| Segmentation | K-Means, K=3; silhouette **0.3667** |
+| Recommendation NDCG@10 | **0.1698** vs segment popularity 0.1232 |
+| Paired 95% bootstrap interval for the NDCG difference | **[0.0349, 0.0585]** |
+| Hit Rate@10 | **58.54%** |
+| Recall@10 | **0.0788** |
+| Active-catalog coverage | **32.0%** of 2,753 items |
 
----
+Evidence: [test metrics](reports/test_metrics.json), [segmentation comparison](reports/cluster_comparison.csv), [evaluation](reports/evaluation.md), [model card](docs/MODEL_CARD.md). These are offline ranking/segmentation results; revenue, margin and campaign uplift were not measured.
 
-## 3. Customer Segments Overview
+## 3. Quick start
 
-| Segment ID | Segment Label | Customer Share | Median Recency | Median Frequency | Median Monetary | Target Campaign Strategy |
-|---|---|---|---|---|---|---|
-| **SG01** | **Steady Active Buyers** | 39.50% | 18.0 days | 4.0 orders | £1,322.90 | Category cross-sell recommendations and volume discounts to boost basket size |
-| **SG02** | **Recent New / Occasional Buyers** | 23.28% | 17.0 days | 1.0 order | £338.71 | Nurture sequence, category discovery recommendations |
-| **SG03** | **Dormant / Low Engagement** | 37.22% | 108.0 days | 1.0 order | £301.03 | Re-engagement win-back discounts, seasonal bestsellers |
+Use Python 3.11. Clone/download the same branch or revision as this README, then run from the repository root. The verified updates are currently in [draft PR 1](https://github.com/luqshzeeq3601-art/05_RetailMind_Customer_Segmentation_Recommender/pull/1) on `fix/portfolio-remediation`.
 
----
-
-## 4. Quickstart & Execution Commands
-
-### 4.1 Local Environment Setup
-
-```powershell
-Set-Location 'C:\Users\ZeeqRyz\Desktop\Ai-ML\Machine Learning Projects\05_RetailMind_Customer_Segmentation_Recommender'
-py -3.11 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
-.\.venv\Scripts\python.exe -m pip install --no-deps -e .
+```sh
+python -m venv .venv
 ```
 
-### 4.2 Pipeline Workflow & MLflow Tracking
+Activate with `.\.venv\Scripts\Activate.ps1` in Windows PowerShell, or `source .venv/bin/activate` on Linux/macOS.
 
-```powershell
-# 1. Download official UCI dataset & record SHA-256 provenance
-.\.venv\Scripts\python.exe -m retailmind.cli download --config configs/default.yaml
-
-# 2. Clean transactions & generate data quality audit
-.\.venv\Scripts\python.exe -m retailmind.cli prepare --config configs/default.yaml
-
-# 3. Train validation candidates & log metrics to SQLite MLflow
-.\.venv\Scripts\python.exe -m retailmind.cli train --stage validation --config configs/default.yaml
-
-# 4. Freeze validation selection into immutable manifest
-.\.venv\Scripts\python.exe -m retailmind.cli freeze --config configs/default.yaml
-
-# 5. Refit frozen algorithms on test cutoff & evaluate 28-day holdout
-.\.venv\Scripts\python.exe -m retailmind.cli train --stage test --config configs/default.yaml
-
-# 6. Launch MLflow UI to inspect logged parameters, metrics & artifacts
-.\.venv\Scripts\python.exe -m mlflow ui --backend-store-uri sqlite:///mlflow.db
+```sh
+python -m pip install -r requirements-dev.txt
+python -m pip install --no-deps -e .
 ```
 
-### 4.3 Serving Interfaces (FastAPI & Streamlit)
+The trusted release bundle is included in `artifacts/release`; retraining is not required to try the dashboard.
 
-```powershell
-# Launch FastAPI REST microservice (Swagger UI: http://localhost:8000/docs)
-.\.venv\Scripts\python.exe -m uvicorn retailmind.api:app --reload --port 8000
+### Open the dashboard
 
-# Generate single-customer recommendation via CLI
-.\.venv\Scripts\python.exe -m retailmind.cli recommend --customer-id 17850 --top-k 10 --bundle artifacts/release
-
-# Launch Streamlit analyst dashboard
-.\.venv\Scripts\python.exe -m streamlit run app/dashboard.py
+```sh
+python -m streamlit run app/dashboard.py
 ```
 
-### 4.4 Verification & Quality Gates
+Use the built-in benchmark demo selector or a customer lookup. `17850` is a documented benchmark customer; `DEMO-NEW-999` demonstrates cold-start fallback. Try recommendations, CSV export and the model-card/evidence tab. [Demo IDs](tests/fixtures/demo_customers.json).
 
-```powershell
-# Run full pytest test suite (31 tests passing)
-.\.venv\Scripts\python.exe -m pytest -q
+### Use the CLI or API
 
-# Run Ruff linter
-.\.venv\Scripts\python.exe -m ruff check .
-
-# Run real-browser Playwright verification
-.\.venv\Scripts\python.exe tests/verify_browser.py
+```sh
+python -m retailmind.cli recommend --customer-id 17850 --top-k 10 --bundle artifacts/release
+python -m uvicorn retailmind.api:app --host 127.0.0.1 --port 8000
 ```
 
-### 4.5 Streamlit Community Cloud Deployment
+Open [local API docs](http://127.0.0.1:8000/docs) for request/response schemas. See [technical design](docs/04_TECHNICAL_DESIGN.md) for the shared service and fallback contract.
 
-1. Fork or push this repository to your GitHub account (`luqshzeeq3601-art/05_RetailMind_Customer_Segmentation_Recommender`).
-2. Navigate to [share.streamlit.io](https://share.streamlit.io/) and click **New app**.
-3. Select repository: `luqshzeeq3601-art/05_RetailMind_Customer_Segmentation_Recommender`, Branch: `master`, Main file path: `app/dashboard.py`.
-4. Click **Deploy!** The release bundle (`artifacts/release/`) is committed in Git and loads instantly without running training in the cloud.
+### Run the dashboard image
 
-### 4.6 Docker Container Execution
+In Bash, from the repository root:
 
-```powershell
-# Build container image
+```sh
 docker build -t retailmind:local .
-
-# Run container with release bundle mounted read-only
-docker run --rm -p 8501:8501 --mount "type=bind,source=$((Get-Location).Path)\artifacts\release,target=/app/artifacts/release,readonly" retailmind:local
+docker run --rm -p 127.0.0.1:8501:8501 --mount "type=bind,source=$(pwd)/artifacts/release,target=/app/artifacts/release,readonly" retailmind:local
 ```
 
----
+On PowerShell, use `(Resolve-Path artifacts/release).Path` as the absolute bind-mount source. The code-only image includes the approved aggregate evaluation report, while the trusted release bundle is mounted read-only.
 
-## 5. Architecture & Technical Design
+## 4. Verification
 
-```
-RetailMind Architecture:
-├── Raw UCI Excel Data (541,909 rows)
-├── 8-Step Data Cleaning Pipeline (390,859 eligible purchases retained)
-├── Chronological Time Splitting (Validation: <2011-10-15, Test: <2011-11-12)
-├── Time-Safe RFM Snapshot Engine (180-day active window, distinct invoices)
-├── Segment Estimator (K-Means K=3, Yeo-Johnson PowerTransform + StandardScaler)
-├── Sparse Recommender Engine:
-│   ├── Item-Item Cosine Similarity (CSR sparse matrices, 256-block cosine)
-│   ├── Bounded Neighbor Index (Top 50 neighbors, min 2 co-buyers)
-│   ├── Segment Popularity Fallback (90-day buyer activity in segment)
-│   └── Global Popularity Fallback (90-day buyer activity across catalog)
-├── Shared Service Layer (Request validation, status precedence, safe CSV export)
-├── Experiment Tracking (SQLite-backed MLflow with run params, metrics & artifacts)
-└── Production Interfaces:
-    ├── FastAPI REST Microservice (retailmind.api, Swagger UI /docs)
-    ├── Command Line Interface (retailmind.cli)
-    ├── Streamlit Intelligence Dashboard (app/dashboard.py)
-    └── Automated Batch Monitoring (retailmind.monitoring)
+```sh
+python -m pytest -q -p no:cacheprovider --basetemp .pytest_tmp
+python -m ruff check .
 ```
 
----
+For the separate browser check, start the dashboard on port 8501, then run:
 
-## 6. Documentation Map
+```sh
+python -m playwright install chromium
+python tests/verify_browser.py
+```
 
-- [Start Here Guide](docs/00_START_HERE.md) — Reading order, execution contract, and verification rules.
-- [Product Requirements Document (PRD)](docs/02_PRD.md) — Functional and non-functional requirements.
-- [Technical Design](docs/04_TECHNICAL_DESIGN.md) — System architecture, module interfaces, and artifact structure.
-- [Data Specification](docs/05_DATA_SPEC.md) — 8-step cleaning rules, temporal split protocol, and RFM definitions.
-- [Experiment & Evaluation Plan](docs/06_EXPERIMENT_PLAN.md) — Candidate models, selection rules, and ranking metrics.
-- [Validation & Delivery Report](reports/validation.md) — Full requirements verification matrix and benchmark results.
-- [Evaluation Report](reports/evaluation.md) — Comprehensive model performance analysis and bootstrap CIs.
-- [Model Card](docs/MODEL_CARD.md) — Measured model metadata, performance metrics, and analytical limitations.
-- [Decisions Log](docs/08_DECISIONS_LOG.md) — Chronological architecture and design decision records.
-- [Progress Log](docs/09_PROGRESS_LOG.md) — Dated implementation entries and verification logs.
-- [License](LICENSE) — MIT Software License & CC BY 4.0 Dataset Attribution.
+CI runs package tests, builds the image, mounts the release read-only and checks desktop/mobile browser flows. [Verification matrix](reports/validation.md) · [Recorded desktop view](reports/screenshots/desktop_customer_view.png).
+
+## 5. Limitations and delivery
+
+- Clusters describe purchase patterns; their IDs have no natural order and do not prove campaign effects.
+- Item similarities are not calibrated purchase probabilities. Cold-start and sparse-history cases use explicit fallback.
+- Data comes from a UK retailer; performance in other catalogues/markets remains unverified.
+- **Public dashboard access remains unverified.** The advertised Streamlit service must pass a fresh-browser access and recommendation check before the delivery task closes.
+
+## 6. Documentation and contributions
+
+[Start here](docs/00_START_HERE.md) · [Data rules](docs/05_DATA_SPEC.md) · [Experiment plan](docs/06_EXPERIMENT_PLAN.md) · [Tasks](tasks/todo.md) · [Progress](docs/09_PROGRESS_LOG.md) · [Sources](docs/12_SOURCES.md) · [Diagram notes and prompt](docs/assets/workflow.md)
+
+Follow [AGENTS.md](AGENTS.md). Preserve chronological splits, the frozen baseline and cohort accounting; include relevant tests for behavior changes.
+
+## 7. License and data
+
+Code/documentation use the [MIT license](LICENSE). UCI Online Retail has its own attribution and source terms. Raw customer transactions are acquired separately; public demos use the benchmark release and documented lookup examples.

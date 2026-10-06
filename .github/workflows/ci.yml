@@ -32,3 +32,26 @@ jobs:
       - name: Run Pytest Test Suite
         run: |
           python -m pytest -q -p no:cacheprovider --basetemp .pytest_tmp
+
+      - name: Build dashboard image
+        run: docker build -t retailmind:ci .
+
+      - name: Verify mounted release dashboard
+        run: |
+          chmod -R a+rX artifacts/release
+          docker run -d --name retailmind-ci -p 127.0.0.1:8501:8501 \
+            --mount type=bind,source="$PWD/artifacts/release",target=/app/artifacts/release,readonly \
+            retailmind:ci
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8501/_stcore/health; then break; fi
+            sleep 2
+          done
+          curl --fail http://127.0.0.1:8501/_stcore/health
+          python -m playwright install --with-deps chromium
+          python tests/verify_browser.py
+
+      - name: Container logs and cleanup
+        if: always()
+        run: |
+          docker logs retailmind-ci || true
+          docker rm -f retailmind-ci || true

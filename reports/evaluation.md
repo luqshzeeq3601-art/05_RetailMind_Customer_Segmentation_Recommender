@@ -18,7 +18,7 @@ All data processing, clustering, item similarity scoring, and evaluations strict
 - **Product Recommendations:** Sparse Item-Item Collaborative Filtering ($N=50$ neighbors) achieved an **NDCG@10 of 0.1698**, **Recall@10 of 0.0788**, and a **Hit Rate@10 of 58.54%** on returning customers, significantly outperforming the frozen validation baseline `SegmentPopularity` (**+37.88% NDCG uplift**, 95% paired bootstrap difference CI: `[0.0349, 0.0585]`, strictly positive) and `GlobalPopularity` (**+35.50% NDCG uplift**).
 - **New Product Recommendations:** In new-items-only mode on 1,188 returners, Item-Item CF achieved **NDCG@10 of 0.0666** and **Recall@10 of 0.0446**, beating the new-product popularity baselines (`GlobalPopularity_NewItemsOnly` at 0.0591 NDCG and `SegmentPopularity_NewItemsOnly` at 0.0596 NDCG).
 - **Latency & Parity:** Warm recommendation inference p95 latency is **3.28 ms** (far below the 200 ms target), with 100% ranking parity between CLI, FastAPI, and Streamlit interfaces.
-- **Commercial Impact:** The +37.88% NDCG uplift and +54.2% Recall lift translate into delivering **1.54 relevant suggestions per customer** (vs 1.09 with popularity), increasing product discovery by **+41.3%** while expanding active catalog surface area **46x** (recommending 881 distinct products vs 19) to monetize the high-margin long tail.
+- **Commercial Impact:** The +37.88% NDCG uplift and +54.2% Recall lift translate into delivering **1.54 relevant suggestions per customer** (vs 1.09 with popularity), increasing product discovery by **+41.3%** while expanding active catalog surface area **46x** (recommending 881 distinct products vs 19) in the offline recommendation lists; margin and revenue effects were not measured.
 
 ---
 
