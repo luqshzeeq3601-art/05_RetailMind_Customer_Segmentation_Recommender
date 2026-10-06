@@ -68,7 +68,7 @@
 
 1. **RFM Feature Transformation Upgrade:** Implemented `Yeo-Johnson` PowerTransformation in `src/retailmind/segmentation.py` (with fallback support for `quantile` and `log1p`). This stabilizes variance across Recency/Frequency/Monetary distributions and improved K-Means ($K=3$) mean silhouette from 0.3317 to **0.3667** (exceeding MO1 target $\ge 0.35$, **MO1 PASSED**), with median pairwise ARI **0.9973** and balanced cluster representation (min cluster share 23.22%).
 2. **Recommender Interaction Weighting:** Added configurable interaction weighting (`weighting_method: "binary" | "tfidf" | "bm25"`) in `ItemItemCollaborativeFiltering` within `src/retailmind/recommenders.py`.
-3. **Master Portfolio Workbook Integration:** Updated `Classical_ML_Portfolio_Plan_Malaysia.xlsx` row 8 (Project 05 RetailMind: Status='Done', End Date='2026-10-06', GitHub Link='https://github.com/ZeeqRyz/RetailMind'). Confirmed `=COUNTIF(G4:G9,"Done")` formula counts 3 completed projects (01 TurbineGuard, 02 ChurnGuard, 05 RetailMind).
+3. **Master Portfolio Workbook Integration:** Updated `Classical_ML_Portfolio_Plan_Malaysia.xlsx` row 8 (Project 05 RetailMind: Status='Done', End Date='2026-10-06', GitHub Link='https://github.com/luqshzeeq3601-art/05_RetailMind_Customer_Segmentation_Recommender'). Confirmed `=COUNTIF(G4:G9,"Done")` formula counts 3 completed projects (01 TurbineGuard, 02 ChurnGuard, 05 RetailMind).
 4. **Pipeline & Evaluation Re-execution:** Executed validation training (`train --stage validation`), selection freeze (`freeze`), and test holdout refit (`train --stage test`).
 5. **Quality Gates & Benchmarking:**
    - Automated test suite: 26 / 26 passing (`pytest -v`).
