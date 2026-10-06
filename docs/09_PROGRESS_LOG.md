@@ -98,3 +98,15 @@
 6. **Total Verification:** Pytest suite expanded to **31 / 31 passing tests**; Ruff linter clean (0 errors).
 
 
+
+
+## 6 October 2026: portfolio remediation execution
+
+Existing desktop/mobile browser verification passed with known-customer recommendation and CSV control. Candidate CI adds mounted-bundle Docker/browser smoke; image now includes the approved aggregate evaluation report required by the UI. Offline impact wording corrected. Local Docker and public access remain unverified.
+
+Evidence: local branch fix/portfolio-remediation; preserved originals and receipts under the workspace .portfolio-audit/2026-10-06/remediation folder. No remote push, merge, external post or cloud deployment was performed.
+
+
+### Container verification completed: 6 October 2026
+
+Linux image build, readiness and functional inference/reorder/recommendation passed. Only task-owned containers were removed; original mounts were read-only. This supersedes the earlier local-Docker pending note. Candidate GitHub execution and public hosting remain pending. Evidence: workspace .portfolio-audit/2026-10-06/remediation/docker.

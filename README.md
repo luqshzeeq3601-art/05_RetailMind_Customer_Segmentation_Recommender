@@ -16,7 +16,7 @@ RetailMind is an end-to-end customer intelligence system that transforms retail 
 | Capability | Model | Primary Metric | Baseline Comparison | Statistical Significance |
 |---|---|---|---|---|
 | **Segmentation** | **K-Means ($K=3$, Yeo-Johnson)** | Silhouette: **0.3667** *(Target $\ge 0.35$ PASSED)* | Median Pairwise ARI: **0.9973** | Converged across 5 seeds; min cluster share 23.22% |
-| **Personalized Recommender** | **Item-Item CF ($N=50$)** | NDCG@10: **0.1698** | Segment Pop: `0.1232` (+37.88%), Global Pop: `0.1253` (+35.50%) | 95% Bootstrap CI Diff vs Frozen Baseline: `[0.0349, 0.0585]` ($p < 0.001$) |
+| **Personalized Recommender** | **Item-Item CF ($N=50$)** | NDCG@10: **0.1698** | Segment Pop: `0.1232` (+37.88%), Global Pop: `0.1253` (+35.50%) | 95% Bootstrap CI Diff vs Frozen Baseline: `[0.0349, 0.0585]` (paired bootstrap interval excludes zero) |
 | **Recommender Hit Rate** | **Item-Item CF ($N=50$)** | Hit Rate@10: **58.54%** | Recall@10: **0.0788** (Precision@10: `0.1539`) | Full un-sampled catalog ($|C| = 2,753$, Coverage 32.0%) |
 | **Inference Latency** | **Service API** | Warm p95: **3.279 ms** | Median: **0.764 ms** (200 requests) | Target $\le 200\text{ ms}$: **PASSED** |
 
@@ -27,9 +27,9 @@ RetailMind is an end-to-end customer intelligence system that transforms retail 
 Translating statistical ranking metrics into tangible retail operations:
 
 * **+41.3% Higher Product Discovery:** Personalized Item-Item CF delivers an average of **1.54 relevant suggestions per customer top-10 list** compared to **1.09** from popularity baselines (Recall@10 increased from 0.0511 to 0.0788, +54.2% relative uplift).
-* **46x Greater Catalog Exposure (Long-Tail Monetization):** Recommends **881 distinct active items** (32.0% catalog coverage) compared to only **19 items** (0.69% coverage) for segment popularity. This activates higher-margin niche inventory without cannibalizing store-wide bestsellers.
+* **46x Greater Catalog Exposure (Offline Catalog Coverage):** Recommends **881 distinct active items** (32.0% catalog coverage) compared to only **19 items** (0.69% coverage) for segment popularity. This measures offline catalog exposure; item margins and cannibalization were not measured.
 * **58.5% Purchase Prediction Hit Rate:** Nearly 6 in 10 returning shoppers receive at least one item in their top 10 that they purchase during the subsequent 28-day window.
-* **Zero Infrastructure Overhead:** Warm p95 latency of **3.28 ms** enables real-time recommendation serving on standard CPU cloud instances without requiring GPU infrastructure.
+* **Measured warm CPU latency:** Warm p95 latency of **3.28 ms** enables real-time recommendation serving on standard CPU cloud instances without requiring GPU infrastructure.
 
 ---
 

@@ -148,3 +148,13 @@
   5. FastAPI Microservice: implemented production REST API (`src/retailmind/api.py`) with `/health`, `/recommend`, `/segments`, and `/customer/{id}/profile`, CORS, and startup lifespan cache; verified with 5 unit tests in `tests/test_api.py`.
 - Evidence: `mlflow.db`, `src/retailmind/api.py`, `tests/test_api.py`, `LICENSE`, `.streamlit/config.toml`, full test suite (31 / 31 passed), 100% Ruff clean.
 
+
+
+## Portfolio remediation: 6 October 2026
+
+Existing desktop/mobile browser verification passed with known-customer recommendation and CSV control. Candidate CI adds mounted-bundle Docker/browser smoke; image now includes the approved aggregate evaluation report required by the UI. Offline impact wording corrected. Local Docker and public access remain unverified.
+
+- [x] Verified local remediation evidence recorded.
+- [ ] Remaining applicable runtime/publication/hosting gates verified.
+
+- [x] Actual Linux container build/readiness/functional verification completed locally.
