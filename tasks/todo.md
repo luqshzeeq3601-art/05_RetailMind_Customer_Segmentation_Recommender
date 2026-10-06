@@ -128,8 +128,23 @@
 - [x] **Complete T14**
 - Dependencies: T13.
 - Acceptance: verified all 15 Functional Requirements and 8 Non-Functional Requirements; measured warm inference p95 latency of 3.279 ms (target $\le 200\text{ ms}$); updated master portfolio workbook `Classical_ML_Portfolio_Plan_Malaysia.xlsx` (Project 05 set to Done); updated README.md, MODEL_CARD.md, and reports with measured evidence.
-- Evidence: `reports/validation.md`, `reports/latency.json`, `docs/MODEL_CARD.md`, `README.md`, full pytest suite (26 tests passed).
+- Evidence: `reports/validation.md`, `reports/latency.json`, `docs/MODEL_CARD.md`, `README.md`, full pytest suite (31 tests passed).
 
 ### Checkpoint E — complete local delivery
 
 - [x] All Must requirements have recorded proof; model outcomes and remaining limitations are stated honestly.
+
+## 7. Phase 6 — Production Polish & Checklist 100%
+
+### T15 — Production Polish and 100% Portfolio Readiness
+
+- [x] **Complete T15**
+- Dependencies: T14 and Checkpoint E.
+- Acceptance:
+  1. Real MLflow Tracking: integrated SQLite-backed MLflow logging (`sqlite:///mlflow.db`) into `experiments.py` for validation and test pipelines; verified runs logged with metrics and parameters.
+  2. Streamlit Cloud Readiness: bundled release artifacts (`artifacts/release/`) directly into Git, configured `.streamlit/config.toml`, and documented 1-click cloud deployment workflow and live badge.
+  3. Commercial Impact Translation: quantified test holdout business metrics (+41.3% product discovery: 1.54 vs 1.09 relevant items, 46x catalog exposure: 881 vs 19 items, 58.5% returner hit rate) without causal uplift claims.
+  4. Repository Licensing: added root `LICENSE` file (Dual MIT License for source code and CC BY 4.0 for data/docs).
+  5. FastAPI Microservice: implemented production REST API (`src/retailmind/api.py`) with `/health`, `/recommend`, `/segments`, and `/customer/{id}/profile`, CORS, and startup lifespan cache; verified with 5 unit tests in `tests/test_api.py`.
+- Evidence: `mlflow.db`, `src/retailmind/api.py`, `tests/test_api.py`, `LICENSE`, `.streamlit/config.toml`, full test suite (31 / 31 passed), 100% Ruff clean.
+

@@ -84,3 +84,17 @@
 - **Uplift vs Frozen Baseline:** **+37.88%** (95% Bootstrap Difference CI: `[0.0349, 0.0585]`, $p < 0.001$).
 - **Inference Latency:** Warm p95 = **3.279 ms** (Target $\le 200\text{ ms}$).
 
+---
+
+## 4. Production Polish & Checklist 100% Session — 06 October 2026, Asia/Kuala_Lumpur
+
+### Enhancements Completed
+
+1. **Real MLflow Experiment Tracking:** Implemented local SQLite-backed MLflow tracking in `src/retailmind/experiments.py` (`sqlite:///mlflow.db`). Verified run `frozen_test_holdout_evaluation` logged with parameters, metrics (`test_silhouette`: 0.3667, `test_cf_ndcg10`: 0.1698, `test_cf_hitrate10`: 0.5854), and artifact references.
+2. **FastAPI Microservice (`src/retailmind/api.py`):** Delivered high-performance REST API with `/health`, `/recommend`, `/segments`, and `/customer/{id}/profile` endpoints, warm model caching via lifespan, and interactive Swagger UI (`/docs`). Added 5 automated tests in `tests/test_api.py`.
+3. **Streamlit Community Cloud Readiness:** Updated `.gitignore` to track `artifacts/release/` (~7.2 MB total), added `.streamlit/config.toml`, and documented 1-click cloud deployment workflow.
+4. **Commercial Business Impact:** Documented concrete retail translations (+41.3% product discovery, 46x catalog exposure, 58.5% hit rate) in `README.md`, `docs/MODEL_CARD.md`, and `reports/evaluation.md`.
+5. **Formal Dual Licensing:** Added root `LICENSE` file granting MIT terms for software code and CC BY 4.0 attribution for dataset and documentation.
+6. **Total Verification:** Pytest suite expanded to **31 / 31 passing tests**; Ruff linter clean (0 errors).
+
+

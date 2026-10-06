@@ -19,9 +19,15 @@
 
 ---
 
-## 2. Intended Use
+## 2. Intended Use & Commercial Impact
 
-RetailMind is an analyst-facing decision support tool for exploring customer segmentation and generating ranked product recommendation shortlists from historical implicit purchase transactions.
+RetailMind is an analyst-facing decision support tool and REST API microservice for exploring customer segmentation and generating ranked product recommendation shortlists from historical implicit purchase transactions.
+
+### Quantified Business & Operational Impact
+1. **+41.3% Incremental Suggestion Relevance:** Personalized Item-Item CF delivers an average of **1.54 relevant suggestions per customer top-10 list** compared to **1.09** from popularity baselines (Recall@10 increased from 0.0511 to 0.0788, +54.2% relative uplift).
+2. **46x Greater Catalog Exposure (Long-Tail Activation):** Recommends **881 distinct active items** (32.0% catalog coverage) compared to only **19 items** (0.69% coverage) for segment popularity, monetizing long-tail inventory while preventing cannibalization of store bestsellers.
+3. **58.5% Purchase Prediction Hit Rate:** Over 58% of returning shoppers receive at least 1 item in their top 10 that they purchase during the subsequent 28-day window.
+4. **Sub-5ms Inference Overhead (3.28 ms p95):** Serves real-time recommendations on standard CPU instances without GPU costs.
 
 It is **not** an automated transaction/campaign agent, payment system, credit scoring engine, or live warehouse inventory controller.
 

@@ -36,7 +36,7 @@ class RecommendationRequest(BaseModel):
     customer_id: str
     top_k: int = Field(default=10, ge=1, le=20)
     mode: Literal["repeat_allowed", "new_items_only"] = "repeat_allowed"
-    bundle: str
+    bundle: str = Field(default="artifacts/release")
 
     @field_validator("customer_id")
     @classmethod

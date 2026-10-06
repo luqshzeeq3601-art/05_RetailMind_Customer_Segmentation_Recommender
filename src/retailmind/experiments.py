@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 import joblib
+import mlflow
 import numpy as np
 import pandas as pd
 import yaml
@@ -421,6 +422,41 @@ def run_validation_pipeline(config_path: str | Path) -> Dict[str, Any]:
     )
     print("Saved validation bundle to artifacts/validation.")
 
+    # 9. Real MLflow experiment logging
+    try:
+        tracking_uri = config.get("tracking", {}).get("mlflow_tracking_uri", "sqlite:///mlflow.db")
+        mlflow.set_tracking_uri(tracking_uri)
+        mlflow.set_experiment("RetailMind_Segmentation_Recommender")
+        with mlflow.start_run(run_name="validation_candidate_comparison"):
+            mlflow.log_params({
+                "stage": "validation",
+                "snapshot_cutoff": str(cutoff),
+                "holdout_start": str(future_start),
+                "holdout_end": str(future_end),
+                "catalog_size": len(catalog_items),
+                "active_customers": len(df_active),
+                "selected_segment_family": selected_seg_info["selected_family"],
+                "selected_recommender": selected_rec_algorithm,
+                "transform_method": seg_cfg.get("transform_method", "yeo_johnson"),
+                "weighting_method": rec_cfg.get("weighting_method", "binary"),
+                "cf_qualifies": validation_report["cf_qualifies"],
+            })
+            mlflow.log_metrics({
+                "val_silhouette": float(selected_seg_info["mean_silhouette"]),
+                "val_median_ari": float(selected_seg_info["median_ari"]),
+                "val_selected_rec_ndcg10": float(validation_report["models"][selected_rec_algorithm]["mean_ndcg"]),
+                "val_selected_rec_recall10": float(validation_report["models"][selected_rec_algorithm]["mean_recall"]),
+                "val_selected_rec_hitrate10": float(validation_report["models"][selected_rec_algorithm]["mean_hit_rate"]),
+                "val_relative_ndcg_gain": float(validation_report["relative_ndcg_gain"]),
+            })
+            if (reports_dir / "cluster_comparison.csv").exists():
+                mlflow.log_artifact(str(reports_dir / "cluster_comparison.csv"))
+            if (reports_dir / "validation_metrics.json").exists():
+                mlflow.log_artifact(str(reports_dir / "validation_metrics.json"))
+            print("Logged validation run and metrics to MLflow.")
+    except Exception as e:
+        print(f"Warning: MLflow logging skipped/failed: {e}")
+
     return validation_report
 
 
@@ -813,5 +849,44 @@ def run_test_pipeline(config_path: str | Path) -> Dict[str, Any]:
         purchases_history=history_purchases,
     )
     print("Saved test and release bundles to artifacts/test and artifacts/release.")
+
+    # Real MLflow experiment logging for test stage
+    try:
+        tracking_uri = config.get("tracking", {}).get("mlflow_tracking_uri", "sqlite:///mlflow.db")
+        mlflow.set_tracking_uri(tracking_uri)
+        mlflow.set_experiment("RetailMind_Segmentation_Recommender")
+        with mlflow.start_run(run_name="frozen_test_holdout_evaluation"):
+            mlflow.log_params({
+                "stage": "test",
+                "snapshot_cutoff": str(cutoff),
+                "holdout_start": str(future_start),
+                "holdout_end": str(future_end),
+                "catalog_size": len(catalog_items),
+                "selected_segment_family": selected_seg_info["selected_family"],
+                "selected_recommender": selected_rec_name,
+                "cf_neighbors": rec_cfg.get("cf_neighbors", 50),
+                "transform_method": seg_cfg.get("transform_method", "yeo_johnson"),
+                "weighting_method": rec_cfg.get("weighting_method", "binary"),
+            })
+            mlflow.log_metrics({
+                "test_silhouette": float(selected_seg_info["mean_silhouette"]),
+                "test_median_ari": float(selected_seg_info["median_ari"]),
+                "test_cf_ndcg10": float(test_report["models"][selected_rec_name]["mean_ndcg"]),
+                "test_cf_recall10": float(test_report["models"][selected_rec_name]["mean_recall"]),
+                "test_cf_hitrate10": float(test_report["models"][selected_rec_name]["mean_hit_rate"]),
+                "test_cf_catalog_coverage": float(test_report["models"][selected_rec_name]["catalog_coverage"]),
+                "test_segpop_ndcg10": float(test_report["models"]["SegmentPopularity"]["mean_ndcg"]),
+                "test_globalpop_ndcg10": float(test_report["models"]["GlobalPopularity"]["mean_ndcg"]),
+                "test_coldstart_ndcg10": float(test_report["models"]["ColdStart_GlobalPop"]["mean_ndcg"]),
+                "test_newitems_cf_ndcg10": float(test_report["models"]["ItemItemCF_N50_NewItemsOnly"]["mean_ndcg"]),
+                "bootstrap_diff_ci_lower": float(test_report["bootstrap_ci_95"]["difference_ndcg"][0]),
+                "bootstrap_diff_ci_upper": float(test_report["bootstrap_ci_95"]["difference_ndcg"][1]),
+            })
+            for rep in ["reports/test_metrics.json", "reports/selection.json", "reports/segment_profiles.csv", "reports/latency.json"]:
+                if Path(rep).exists():
+                    mlflow.log_artifact(rep)
+            print("Logged test evaluation run and metrics to MLflow.")
+    except Exception as e:
+        print(f"Warning: MLflow test logging skipped/failed: {e}")
 
     return test_report

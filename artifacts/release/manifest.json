@@ -1,0 +1,30 @@
+{
+  "bundle_version": "0.1.0-release",
+  "stage": "test",
+  "snapshot_cutoff": "2011-11-12 00:00:00",
+  "created_at": "2026-10-06T06:58:58.896888+00:00",
+  "source_sha256": "43465A06F2CCF7C8B5BD2892BC7DEFB52F97487934FE93B16AE4C3936424676D",
+  "config_sha256": "D14C1F835CD91C8651FDE6D5AE0E1DA1547831C188EB2E5CAFD1447988E9CBDD",
+  "lock_sha256": "E5F4A06797B034CD6F6C02787A831BD4241DD91DC68A371D8F842DF44BEEADF9",
+  "selection_manifest_sha256": "EC6CC7EB46CF564F235A237A8A0CE793FC8C9B9DB0040538E06173B90A2D4187",
+  "segment_algorithm": "KMeans",
+  "segment_params": {
+    "selected_family": "KMeans",
+    "k_components": 3,
+    "covariance_type": "none",
+    "transform_method": "yeo_johnson",
+    "mean_silhouette": 0.3667,
+    "median_ari": 0.9973,
+    "is_rule_baseline": false
+  },
+  "recommender_algorithm": "ItemItemCF_N50",
+  "recommender_params": {},
+  "catalog_size": 2753,
+  "active_customers_count": 3289,
+  "known_customers_count": 4108,
+  "reports": {
+    "test_metrics": "reports/test_metrics.json",
+    "selection": "reports/selection.json",
+    "validation_metrics": "reports/validation_metrics.json"
+  }
+}

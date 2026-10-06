@@ -23,7 +23,7 @@ data/raw/
 data/processed/*.parquet
 artifacts/validation/
 artifacts/test/
-artifacts/release/
+# Note: artifacts/release/ is tracked in Git for zero-setup Streamlit Community Cloud deployment
 
 # MLflow tracking
 mlruns/

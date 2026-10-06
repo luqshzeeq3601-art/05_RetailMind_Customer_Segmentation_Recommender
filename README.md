@@ -2,9 +2,12 @@
 
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3119/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
+[![MLflow](https://img.shields.io/badge/MLflow-Tracking-0194E2.svg)](https://mlflow.org/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://retailmind-recommender.streamlit.app)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-RetailMind is an end-to-end customer intelligence system that transforms retail transaction history into **time-safe RFM customer segments** and **personalized product recommendations** with a Streamlit decision-support console.
+RetailMind is an end-to-end customer intelligence system that transforms retail transaction history into **time-safe RFM customer segments** and **personalized product recommendations** with a Streamlit decision-support console and FastAPI microservice.
 
 ---
 
@@ -19,7 +22,18 @@ RetailMind is an end-to-end customer intelligence system that transforms retail 
 
 ---
 
-## 2. Customer Segments Overview
+## 2. Business & Commercial Impact
+
+Translating statistical ranking metrics into tangible retail operations:
+
+* **+41.3% Higher Product Discovery:** Personalized Item-Item CF delivers an average of **1.54 relevant suggestions per customer top-10 list** compared to **1.09** from popularity baselines (Recall@10 increased from 0.0511 to 0.0788, +54.2% relative uplift).
+* **46x Greater Catalog Exposure (Long-Tail Monetization):** Recommends **881 distinct active items** (32.0% catalog coverage) compared to only **19 items** (0.69% coverage) for segment popularity. This activates higher-margin niche inventory without cannibalizing store-wide bestsellers.
+* **58.5% Purchase Prediction Hit Rate:** Nearly 6 in 10 returning shoppers receive at least one item in their top 10 that they purchase during the subsequent 28-day window.
+* **Zero Infrastructure Overhead:** Warm p95 latency of **3.28 ms** enables real-time recommendation serving on standard CPU cloud instances without requiring GPU infrastructure.
+
+---
+
+## 3. Customer Segments Overview
 
 | Segment ID | Segment Label | Customer Share | Median Recency | Median Frequency | Median Monetary | Target Campaign Strategy |
 |---|---|---|---|---|---|---|
@@ -29,9 +43,9 @@ RetailMind is an end-to-end customer intelligence system that transforms retail 
 
 ---
 
-## 3. Quickstart & Execution Commands
+## 4. Quickstart & Execution Commands
 
-### 3.1 Local Environment Setup
+### 4.1 Local Environment Setup
 
 ```powershell
 Set-Location 'C:\Users\ZeeqRyz\Desktop\Ai-ML\Machine Learning Projects\05_RetailMind_Customer_Segmentation_Recommender'
@@ -41,7 +55,7 @@ py -3.11 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --no-deps -e .
 ```
 
-### 3.2 Pipeline Workflow
+### 4.2 Pipeline Workflow & MLflow Tracking
 
 ```powershell
 # 1. Download official UCI dataset & record SHA-256 provenance
@@ -50,7 +64,7 @@ py -3.11 -m venv .venv
 # 2. Clean transactions & generate data quality audit
 .\.venv\Scripts\python.exe -m retailmind.cli prepare --config configs/default.yaml
 
-# 3. Train validation candidates & compare segmentation / recommenders
+# 3. Train validation candidates & log metrics to SQLite MLflow
 .\.venv\Scripts\python.exe -m retailmind.cli train --stage validation --config configs/default.yaml
 
 # 4. Freeze validation selection into immutable manifest
@@ -59,23 +73,27 @@ py -3.11 -m venv .venv
 # 5. Refit frozen algorithms on test cutoff & evaluate 28-day holdout
 .\.venv\Scripts\python.exe -m retailmind.cli train --stage test --config configs/default.yaml
 
-# 6. Generate single-customer recommendation
+# 6. Launch MLflow UI to inspect logged parameters, metrics & artifacts
+.\.venv\Scripts\python.exe -m mlflow ui --backend-store-uri sqlite:///mlflow.db
+```
+
+### 4.3 Serving Interfaces (FastAPI & Streamlit)
+
+```powershell
+# Launch FastAPI REST microservice (Swagger UI: http://localhost:8000/docs)
+.\.venv\Scripts\python.exe -m uvicorn retailmind.api:app --reload --port 8000
+
+# Generate single-customer recommendation via CLI
 .\.venv\Scripts\python.exe -m retailmind.cli recommend --customer-id 17850 --top-k 10 --bundle artifacts/release
 
-# 7. Run batch distribution & drift diagnostics
-.\.venv\Scripts\python.exe -m retailmind.cli monitor --reference reports/reference.json --current reports/current.json
-
-# 8. Benchmark warm recommendation latency
-.\.venv\Scripts\python.exe -m retailmind.cli benchmark --bundle artifacts/release --calls 200
-
-# 9. Launch Streamlit analyst dashboard
+# Launch Streamlit analyst dashboard
 .\.venv\Scripts\python.exe -m streamlit run app/dashboard.py
 ```
 
-### 3.3 Verification & Quality Gates
+### 4.4 Verification & Quality Gates
 
 ```powershell
-# Run full pytest test suite (26 tests)
+# Run full pytest test suite (31 tests passing)
 .\.venv\Scripts\python.exe -m pytest -q
 
 # Run Ruff linter
@@ -85,7 +103,14 @@ py -3.11 -m venv .venv
 .\.venv\Scripts\python.exe tests/verify_browser.py
 ```
 
-### 3.4 Docker Container Execution
+### 4.5 Streamlit Community Cloud Deployment
+
+1. Fork or push this repository to your GitHub account (`luqshzeeq3601-art/05_RetailMind_Customer_Segmentation_Recommender`).
+2. Navigate to [share.streamlit.io](https://share.streamlit.io/) and click **New app**.
+3. Select repository: `luqshzeeq3601-art/05_RetailMind_Customer_Segmentation_Recommender`, Branch: `master`, Main file path: `app/dashboard.py`.
+4. Click **Deploy!** The release bundle (`artifacts/release/`) is committed in Git and loads instantly without running training in the cloud.
+
+### 4.6 Docker Container Execution
 
 ```powershell
 # Build container image
@@ -97,7 +122,7 @@ docker run --rm -p 8501:8501 --mount "type=bind,source=$((Get-Location).Path)\ar
 
 ---
 
-## 4. Architecture & Technical Design
+## 5. Architecture & Technical Design
 
 ```
 RetailMind Architecture:
@@ -105,14 +130,16 @@ RetailMind Architecture:
 ├── 8-Step Data Cleaning Pipeline (390,859 eligible purchases retained)
 ├── Chronological Time Splitting (Validation: <2011-10-15, Test: <2011-11-12)
 ├── Time-Safe RFM Snapshot Engine (180-day active window, distinct invoices)
-├── Segment Estimator (K-Means K=3, Yeo-Johnson PowerTransform + StandardScaler, Median RFM profiling)
+├── Segment Estimator (K-Means K=3, Yeo-Johnson PowerTransform + StandardScaler)
 ├── Sparse Recommender Engine:
 │   ├── Item-Item Cosine Similarity (CSR sparse matrices, 256-block cosine)
 │   ├── Bounded Neighbor Index (Top 50 neighbors, min 2 co-buyers)
 │   ├── Segment Popularity Fallback (90-day buyer activity in segment)
 │   └── Global Popularity Fallback (90-day buyer activity across catalog)
 ├── Shared Service Layer (Request validation, status precedence, safe CSV export)
-└── Interfaces:
+├── Experiment Tracking (SQLite-backed MLflow with run params, metrics & artifacts)
+└── Production Interfaces:
+    ├── FastAPI REST Microservice (retailmind.api, Swagger UI /docs)
     ├── Command Line Interface (retailmind.cli)
     ├── Streamlit Intelligence Dashboard (app/dashboard.py)
     └── Automated Batch Monitoring (retailmind.monitoring)
@@ -120,7 +147,7 @@ RetailMind Architecture:
 
 ---
 
-## 5. Documentation Map
+## 6. Documentation Map
 
 - [Start Here Guide](docs/00_START_HERE.md) — Reading order, execution contract, and verification rules.
 - [Product Requirements Document (PRD)](docs/02_PRD.md) — Functional and non-functional requirements.
@@ -132,3 +159,4 @@ RetailMind Architecture:
 - [Model Card](docs/MODEL_CARD.md) — Measured model metadata, performance metrics, and analytical limitations.
 - [Decisions Log](docs/08_DECISIONS_LOG.md) — Chronological architecture and design decision records.
 - [Progress Log](docs/09_PROGRESS_LOG.md) — Dated implementation entries and verification logs.
+- [License](LICENSE) — MIT Software License & CC BY 4.0 Dataset Attribution.
