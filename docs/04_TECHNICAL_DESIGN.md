@@ -34,11 +34,11 @@ Held-out purchases enter the evaluator only. They never enter the service bundle
 | Verification | pytest and Ruff | Behavior tests and consistent Python checks |
 | Packaging | Docker and GitHub Actions configuration | Portable local demo and repeatable checks |
 
-Versions are **not selected or installed yet**. T01 checks supported APIs and resolves compatible versions. `pyproject.toml` owns dependency declarations; generated `requirements.txt` and `requirements-dev.txt` pin the resolved environment. The latter includes the runtime requirements. Do not maintain conflicting manual version lists.
+Runtime is locked on **Python 3.11.9**. Compatible dependencies are pinned in `requirements.txt` and `requirements-dev.txt`, and locked in `requirements.lock` (`E5F4A06797B034CD6F6C02787A831BD4241DD91DC68A371D8F842DF44BEEADF9`). `pyproject.toml` defines package metadata.
 
-## 3. Planned repository layout
+## 3. Implemented repository layout
 
-Only Markdown planning files currently exist. Create implementation folders when their tasks begin.
+All pipeline modules, tests, dashboards, and artifacts are fully implemented and structured as follows:
 
 ```text
 app/dashboard.py

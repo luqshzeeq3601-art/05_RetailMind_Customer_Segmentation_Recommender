@@ -2,7 +2,7 @@
 
 ## 1. Source and provenance
 
-Primary dataset: **UCI Online Retail**. Verified source metadata, license, citation and acquisition page are in [the source register](12_SOURCES.md). The file has not been downloaded during planning.
+Primary dataset: **UCI Online Retail**. Verified source metadata, license, citation and acquisition page are in [the source register](12_SOURCES.md). The original file is preserved in `data/raw/Online Retail.xlsx` (SHA-256: `43465A06F2CCF7C8B5BD2892BC7DEFB52F97487934FE93B16AE4C3936424676D`).
 
 On acquisition, preserve the original XLSX in `data/raw/`, record its SHA-256, retrieval time and official source URL, and never overwrite it with cleaned data. Read the XLSX with openpyxl via pandas; this is data ingestion, not spreadsheet authoring.
 
