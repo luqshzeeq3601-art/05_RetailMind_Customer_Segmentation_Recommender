@@ -30,15 +30,15 @@ The spreadsheet names Astro and PetBacker as employer matches for this project. 
 | **BO1** | Make customer groups actionable | Every displayed segment has count, share, median R/F/M, descriptive label and campaign hypothesis | 3 distinct segments (SG01-SG03) with full business profiles in `reports/segment_profiles.csv` | **PASSED** |
 | **BO2** | Usable product shortlist | Up to 10 unique eligible items with reason codes and fallback status | Ranked top-10 with reason strings and supporting codes; verified in `src/retailmind/service.py` | **PASSED** |
 | **BO3** | State impact honestly | Report offline ranking metrics with CIs; no fabricated business uplift claims | Explicit caveats in `reports/evaluation.md` and `docs/MODEL_CARD.md` | **PASSED** |
-| **MO1** | Segment separation | Mean silhouette >= 0.35 | **0.3317** (K-Means $K=3$); documented honestly as missed in all reports | **MISSED** |
-| **MO2** | Segment stability | Median pairwise ARI >= 0.80 across seeds, each cluster >= 3% of active customers | Median ARI = **0.9992**, min cluster share = **23.51%**; `reports/cluster_comparison.csv` | **PASSED** |
-| **MO3** | Recommender uplift | >= 10% relative NDCG@10 gain over strongest baseline with nondecreasing Recall | NDCG@10 = **0.1698** vs **0.1211** SegmentPopularity (**+40.29%**, 95% CI `[0.0368, 0.0606]`) | **PASSED** |
+| **MO1** | Segment separation | Mean silhouette >= 0.35 | **0.3667** (K-Means $K=3$, Yeo-Johnson transform); `reports/cluster_comparison.csv` | **PASSED** |
+| **MO2** | Segment stability | Median pairwise ARI >= 0.80 across seeds, each cluster >= 3% of active customers | Median ARI = **0.9973**, min cluster share = **23.22%**; `reports/cluster_comparison.csv` | **PASSED** |
+| **MO3** | Recommender uplift | >= 10% relative NDCG@10 gain over strongest baseline with nondecreasing Recall | NDCG@10 = **0.1698** vs **0.1232** SegmentPopularity (**+37.88%**, 95% CI `[0.0349, 0.0585]`) | **PASSED** |
 | **MO4** | Coverage & cold start | Report catalog coverage, cold-start metrics, new-item metrics, fallback share | 32.0% catalog coverage, cold-start NDCG 0.0853, new-product NDCG 0.0666; `reports/test_metrics.json` | **PASSED** |
 | **EO1** | Reproducibility | Deterministic seeds and locked hashes reproduce identical results ($\Delta < 10^{-6}$) | Pinned `requirements.lock`, verified in `tests/test_reproducibility.py` | **PASSED** |
-| **EO2** | Responsive inference | Warm single-customer recommendation p95 <= 200 ms | **3.450 ms** over 200 timed calls (`reports/latency.json`) | **PASSED** |
+| **EO2** | Responsive inference | Warm single-customer recommendation p95 <= 200 ms | **3.279 ms** over 200 timed calls (`reports/latency.json`) | **PASSED** |
 | **EO3** | Analyst workflow | Streamlit dashboard with segment explorer, customer search, and CSV export | Playwright real-browser verified on desktop and mobile (`tests/verify_browser.py`) | **PASSED** |
 | **EO4** | Training / serving parity | CLI and dashboard share identical service layer and return identical rankings | Verified in `src/retailmind/service.py` and `tests/test_service.py` | **PASSED** |
-| **EO5** | Delivery & packaging | Clean test suite, clean linter, reproducible packaging, local CI equivalent | 24 pytest tests passing, Ruff clean, Dockerfile, Git repo initialized | **PASSED** |
+| **EO5** | Delivery & packaging | Clean test suite, clean linter, reproducible packaging, local CI equivalent | 26 pytest tests passing, Ruff clean, Dockerfile, Git repo initialized | **PASSED** |
 
 ## 5. Limits
 
